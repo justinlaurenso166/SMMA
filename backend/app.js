@@ -7,6 +7,7 @@ const app = express()
 //import route
 const MesinRoute = require("./routes/Mesin");
 const UserRoute = require("./routes/Login");
+const SensorsRoute = require("./routes/Sensors");
 
 // middleware
 app.use(bodyParser.json())
@@ -17,6 +18,7 @@ app.get("/", (req, res) => {
 
 app.use('/mesin', MesinRoute)
 app.use('/user', UserRoute)
+app.use('/sensor', SensorsRoute)
     //start server
 app.listen(4000, () => {
     console.log("listeniing at port:4000")

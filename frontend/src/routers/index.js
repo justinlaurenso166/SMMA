@@ -1,13 +1,16 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useStore } from "vuex";
-import Home from "../views/Home.vue"
+import Dashboard from "../views/Dashboard.vue"
+import JenisMesin from "../views/JenisMesin.vue"
 import Login from "../views/Login.vue"
 
 const store = useStore();
 
 const routes = [
-    { path: "/", name: "Home", component: Home },
+    { path: '/', redirect: "/login" },
+    { path: "/dashboard", name: "Dashboard", component: Dashboard },
     { path: "/login", name: "Login", component: Login },
+    { path: "/jenis_mesin", name: "JenisMesin", component: JenisMesin },
 ];
 
 const router = createRouter({
@@ -26,7 +29,7 @@ const router = createRouter({
 // });
 
 // router.beforeEach(function(to, from, next) {
-//     if (to.path !== "/login" && store.state.user_data.username === "") {
+//     if (to.path !== "/login" && store.state.user_data === {}) {
 //         next("/login")
 //     } else {
 //         next();

@@ -8,6 +8,6 @@
 
 <style>
 #app {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Noto Sans';
 }
 </style>
