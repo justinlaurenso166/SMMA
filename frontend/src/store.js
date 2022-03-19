@@ -8,14 +8,14 @@ const store = createStore({
     })],
 
     state: () => ({
-        user_data: {},
+        user_data: null,
     }),
     mutations: {
         MUTATE_USER_DATA(state, payload) {
             if (payload !== null) {
                 state.user_data = payload[0];
             } else {
-                state.user_data = {};
+                state.user_data = null;
             }
         },
     },

@@ -15,11 +15,11 @@ import LineChart from "../components/Chart/LineChart.vue"
 
 <template>
     <div class="flex bg-gray-100">
-        <div style="width: 500px">
+        <div >
             <SideBar />
         </div>
         <div class="w-full overflow-y-auto h-screen">
-            <header class="bg-light px-7 py-5 flex justify-between sticky top-0" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);">
+            <header class="bg-light px-7 py-5 flex justify-between sticky top-0 z-50" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);">
                 <div>
                     <input type="text" placeholder="Search For..." class="border border-main_blue px-3 py-1.5 rounded-md w-80 text-xl focus:outline-none">
                 </div>
@@ -154,7 +154,7 @@ import LineChart from "../components/Chart/LineChart.vue"
                                 <select class="cursor-pointer focus:outline-none text-xl">
                                     <option>Percepatan</option>
                                     <option>Kecepatan</option>
-                                    <option>Suhu</option>
+                                    <option>Temperatur</option>
                                 </select>
                             </div>
                         </div>
