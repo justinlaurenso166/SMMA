@@ -1,8 +1,6 @@
 <script setup>
 import SideBar from "../../components/SideBar.vue"
 import radialBar from "../../components/Chart/radialBarDetail.vue"
-import Modal from "../../components/ModalConfirm.vue"
-import ModalEdit from "../../components/ModalEdit.vue"
 import LineChart from "../../components/Chart/LineChart.vue"
 import Datepicker from 'vue3-date-time-picker';
 import 'vue3-date-time-picker/dist/main.css'
@@ -85,9 +83,9 @@ onMounted(()=>{
                 <div>
                     <div class="flex gap-7">
                         <div class="w-1/3 bg-light b-shadow py-7 px-8 rounded-xl">
-                            <div class="w-6 h-6 bg-main_blue float-right rounded hover:cursor-pointer" @click="editMesin = true"></div>
+                            <div class="w-6 h-6 bg-main_blue float-right rounded hover:cursor-pointer" @click="editMesin = !editMesin"></div>
                             <h3 class="text-center font-bold text-lg">Detail Mesin</h3>
-                            <div class="info mt-5">
+                            <div class="info mt-5" v-if="!editMesin">
                                 <div class="kode text-lg">
                                     <h3 class="font-bold">Kode - Monitoring</h3>
                                     <p class="">MSN-001</p>
@@ -105,11 +103,29 @@ onMounted(()=>{
                                     <p class="">SS-001</p>
                                 </div>
                             </div>
+                            <div class="info mt-5" v-else>
+                                <div class="kode text-lg">
+                                    <h3 class="font-bold">Kode - Monitoring</h3>
+                                    <input type="text" class="mt-1 border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full" value="MSN-001">
+                                </div>
+                                <div class="nama text-lg mt-2">
+                                    <h3 class="font-bold">Nama</h3>
+                                    <input type="text" class="mt-1 border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full" value="Monitoring-001">
+                                </div>
+                                <div class="jenis text-lg mt-2">
+                                    <h3 class="font-bold">Jenis Mesin</h3>
+                                    <input type="text" class="mt-1 border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full" value="Motor-Kecil">
+                                </div>
+                                <div class="sensor text-lg mt-2">
+                                    <h3 class="font-bold">Kode Sensor</h3>
+                                    <input type="text" class="mt-1 border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full" value="SS-001">
+                                </div>
+                            </div>
                         </div>
                         <div class="w-2/3 bg-light b-shadow rounded-xl py-7 px-8">
-                            <div class="w-6 h-6 bg-main_blue float-right rounded hover:cursor-pointer" @click="editPenjelasan = true"></div>
+                            <div class="w-6 h-6 bg-main_blue float-right rounded hover:cursor-pointer" @click="editPenjelasan = !editPenjelasan"></div>
                             <h3 class="text-center font-bold text-lg">Penjelasan Mesin</h3>
-                            <div class="penjelasan mt-7 text-lg">
+                            <div class="penjelasan mt-7 text-lg" v-if="!editPenjelasan">
                                 <div class="deskripsi">
                                     <h3 class="font-bold">Deskripsi</h3>
                                     <p class="text-justify mt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam blanditiis laboriosam cum corrupti doloremque commodi quo, sint odio rem quisquam nisi maxime aspernatur et voluptatum. Velit laboriosam libero expedita unde. Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi mollitia laudantium eligendi ullam, dolore ipsa quia, eaque nisi amet recusandae est laborum minima earum pariatur porro, veritatis in necessitatibus et.</p>
@@ -117,6 +133,16 @@ onMounted(()=>{
                                 <div class="lokasi mt-5">
                                     <h3 class="font-bold">Lokasi</h3>
                                     <p class="text-justify mt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores unde in fugiat temporibus aliquid laborum harum mollitia enim cupiditate placeat, hic excepturi impedit! Debitis, illum accusantium. Consectetur, fuga. Error, ipsum.</p>
+                                </div>
+                            </div>
+                            <div class="penjelasan mt-7 text-lg" v-else>
+                                <div class="deskripsi">
+                                    <h3 class="font-bold">Deskripsi</h3>
+                                    <textarea class="mt-2 border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full" rows="6" >Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam blanditiis laboriosam cum corrupti doloremque commodi quo, sint odio rem quisquam nisi maxime aspernatur et voluptatum. Velit laboriosam libero expedita unde. Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi mollitia laudantium eligendi ullam, dolore ipsa quia, eaque nisi amet recusandae est laborum minima earum pariatur porro, veritatis in necessitatibus et</textarea>
+                                </div>
+                                <div class="lokasi mt-5">
+                                    <h3 class="font-bold">Lokasi</h3>
+                                    <textarea class="border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full mt-2" rows="4" >Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores unde in fugiat temporibus aliquid laborum harum mollitia enim cupiditate placeat, hic excepturi impedit! Debitis, illum accusantium. Consectetur, fuga. Error, ipsum.</textarea>
                                 </div>
                             </div>
                         </div>
@@ -172,72 +198,6 @@ onMounted(()=>{
                     </div>
                 </div>
             </section>
-            <modal v-if="editMesin && !editPenjelasan">
-                <template v-slot:header>
-                    <h3 class="text-xl font-bold text-center">Ubah Mesin</h3>
-                </template>
-                <template v-slot:body>
-                    <div class="flex text-lg items-center mt-5">
-                        <div class="flex-1 font-bold">Kode - Monitoring</div>
-                        <div class="flex-1">
-                            <input type="text" class="border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full" value="MSN-001">
-                        </div>
-                    </div>
-                    <div class="flex text-lg items-center mt-2">
-                        <div class="flex-1 font-bold">Nama</div>
-                        <div class="flex-1">
-                            <input type="text" class="border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full" value="Monitoring-001">
-                        </div>
-                    </div>
-                    <div class="flex text-lg items-center mt-2">
-                        <div class="flex-1 font-bold">Jenis Mesin</div>
-                        <div class="flex-1">
-                            <input type="text" class="border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full" value="Motor-Kecil">
-                        </div>
-                    </div>
-                    <div class="flex text-lg items-center mt-2">
-                        <div class="flex-1 font-bold">Kode Sensor</div>
-                        <div class="flex-1">
-                            <input type="text" class="border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full" value="SS-001">
-                        </div>
-                    </div>
-                    <div class="flex gap-8 w-80 m-auto mt-10">
-                        <div class="flex-1">
-                            <button class="bg-red-200 w-full text-light font-semibold text-lg rounded-lg py-2" @click="editMesin = false">Cancel</button>
-                        </div>
-                        <div class="flex-1">
-                            <button class="bg-main_blue w-full text-light font-semibold text-lg rounded-lg py-2">Save Changes</button>
-                        </div>
-                    </div>
-                </template>
-            </modal>
-            <modal-edit v-if="!editMesin && editPenjelasan">
-                <template v-slot:header>
-                    <h3 class="text-xl font-bold text-center">Ubah Deskripsi & Lokasi</h3>
-                </template>
-                <template v-slot:body>
-                    <div class="flex text-lg items-center mt-5">
-                        <div class="flex-0 w-44 font-bold">Deskripsi</div>
-                        <div class="flex-1">
-                            <textarea class="border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full" rows="6" >Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam blanditiis laboriosam cum corrupti doloremque commodi quo, sint odio rem quisquam nisi maxime aspernatur et voluptatum. Velit laboriosam libero expedita unde. Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi mollitia laudantium eligendi ullam, dolore ipsa quia, eaque nisi amet recusandae est laborum minima earum pariatur porro, veritatis in necessitatibus et</textarea>
-                        </div>
-                    </div>
-                    <div class="flex text-lg items-center mt-5">
-                        <div class="flex-0 w-44 font-bold">Lokasi</div>
-                        <div class="flex-1">
-                            <textarea class="border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full" rows="4" >Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores unde in fugiat temporibus aliquid laborum harum mollitia enim cupiditate placeat, hic excepturi impedit! Debitis, illum accusantium. Consectetur, fuga. Error, ipsum.</textarea>
-                        </div>
-                    </div>
-                    <div class="flex gap-8 w-80 m-auto mt-10">
-                        <div class="flex-1">
-                            <button class="bg-red-200 w-full text-light font-semibold text-lg rounded-lg py-2" @click="editPenjelasan = false">Cancel</button>
-                        </div>
-                        <div class="flex-1">
-                            <button class="bg-main_blue w-full text-light font-semibold text-lg rounded-lg py-2">Save Changes</button>
-                        </div>
-                    </div>
-                </template>
-            </modal-edit>
         </div>
     </div>
 </template>
