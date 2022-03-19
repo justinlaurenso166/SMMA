@@ -1,4 +1,7 @@
 <script setup>
+    import { useRouter } from "vue-router";
+import store from "../store"
+    const router = useRouter();
 
     const menu = [
         {
@@ -22,12 +25,15 @@
             link: "/user_setting"
         }
     ]
+
+    function logout(){
+        store.commit("MUTATE_USER_DATA", null);
+        router.push({name:"Login"})
+    }
 </script>
 
 <style scoped>
-.sidebar{
-    /* box-shadow: 44x 2px 3px rgba(0, 79, 155, 0.25); */
-}    
+
 </style>
 
 <template>
@@ -59,9 +65,9 @@
                     </div>
                 </router-link>
             </section>
-            <!-- <div class="absolute bottom-0 py-8 px-5 w-1/5 ml-auto">
-                <button class="bg-main_red text-light w-full text-xl p-2 rounded-lg">Logout</button>
-            </div> -->
+            <div class="absolute bottom-0 py-8 px-5 w-1/5 ml-auto">
+                <button class="bg-main_red text-light w-full text-xl p-2 rounded-lg" @click="logout()">Logout</button>
+            </div>
         </section>
     </div>
 </template>

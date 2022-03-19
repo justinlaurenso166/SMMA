@@ -5,9 +5,12 @@ import { ref } from "@vue/reactivity"
 import { onMounted } from "@vue/runtime-core";
 import { createToast } from "mosha-vue-toastify";
 import "mosha-vue-toastify/dist/style.css";
+import modal from "../../components/ModalConfirm.vue"
 
 //------------REACTIVE STATE-------------
 const all_jenis_mesin = ref([]);
+const showDeleteBox = ref(false);
+const remove_id = ref("");
 
 async function getJenisMesin(){
     await axios.get('/api/jenis_mesin/all').then((response)=>{
@@ -16,9 +19,10 @@ async function getJenisMesin(){
     })
 }
 
-async function deleteJenisMesin(id){
-    await axios.delete(`/api/jenis_mesin/delete/${id}`).then((response)=>{
-        console.log(response.data)
+async function deleteJenisMesin(){
+    showDeleteBox.value = false;
+    await axios.delete(`/api/jenis_mesin/delete/${remove_id.value}`).then((response)=>{
+        // console.log(response.data)
         if(response.status === 200){
             createToast(response.data,{
                 type: "success",
@@ -69,7 +73,7 @@ onMounted(async()=>{
                 </div>
 
                 <div>
-                    <div class="flex justify-end">
+                    <div class="flex justify-end" v-if="$store.state.user_data.hak_akses === 1">
                         <button class="text-light bg-main_blue text-xl px-6 py-3 rounded-xl" @click="$router.push({name:'TambahJenisMesin'})">Tambah +</button>
                     </div>
                     <div class="table bg-light b-shadow w-full px-8 py-6 mt-6 rounded-xl">
@@ -78,7 +82,7 @@ onMounted(async()=>{
                                 <th class="border border-main_blue">No.</th>
                                 <th class="border border-main_blue">Kode</th>
                                 <th class="border border-main_blue">Nama</th>
-                                <th class="border border-main_blue">Action</th>
+                                <th class="border border-main_blue" v-if="$store.state.user_data.hak_akses === 1">Action</th>
                             </tr>
                             <tr v-for="(jenis, i) in all_jenis_mesin" :key="jenis._id">
                                 <td :class="(i+1)%2==1 ? 'bg-blue-100' : 'bg-light'" class="text-center p-2 text-lg font-medium border-l">{{(i+1)}}.</td>
@@ -86,13 +90,25 @@ onMounted(async()=>{
                                     <span class="cursor-pointer" @click="$router.push({name: 'DetailJenisMesin',params:{_id: jenis._id}})">{{jenis.kode_jenis_mesin}}</span>
                                 </td>
                                 <td :class="(i+1)%2==1 ? 'bg-blue-100' : 'bg-light'" class="px-4 py-3 text-lg font-medium border-l">{{jenis.jenis_mesin}}</td>
-                                <td :class="(i+1)%2==1 ? 'bg-blue-100' : 'bg-light'" class="text-center px-4 py-3 text-lg font-medium border-l">
-                                    <div class="bg-main_blue w-9 h-9 m-auto hover:cursor-pointer rounded-md" @click="deleteJenisMesin(jenis._id)"></div>
+                                <td :class="(i+1)%2==1 ? 'bg-blue-100' : 'bg-light'" class="text-center px-4 py-3 text-lg font-medium border-l" v-if="$store.state.user_data.hak_akses === 1">
+                                    <div class="bg-red-200 w-9 h-9 m-auto hover:cursor-pointer rounded-md" @click="showDeleteBox = true; remove_id = jenis._id"></div>
                                 </td>
                             </tr>
                         </table>
                     </div>
                 </div>
+                <modal v-if="showDeleteBox">
+                    <template v-slot:body>
+                        <div>
+                            <h3 class="text-2xl text-center font-bold">Apakah Anda yakin ingin menghapus jenis mesin ini ?</h3>
+                            <p class="text-center text-xl font-medium mt-5">Data akan terhapus selamanya</p>
+                            <div class="flex gap-12 mt-10">
+                                <button class="flex-1 bg-red-200 text-light text-lg text-semibold py-2.5 rounded-lg" @click="showDeleteBox = false">Batal</button>
+                                <button class="flex-1 bg-main_blue text-light text-lg text-semibold py-2.5 rounded-lg" @click="deleteJenisMesin()">Ya, hapus data ini</button>
+                            </div>
+                        </div>
+                    </template>
+                </modal>
             </section>
         </div>
     </div>

@@ -83,7 +83,7 @@ onMounted(()=>{
                 <div>
                     <div class="flex gap-7">
                         <div class="w-1/3 bg-light b-shadow py-7 px-8 rounded-xl">
-                            <div class="w-6 h-6 bg-main_blue float-right rounded hover:cursor-pointer" @click="editMesin = !editMesin"></div>
+                            <div class="w-6 h-6 bg-main_blue float-right rounded hover:cursor-pointer" @click="editMesin = !editMesin" v-if="$store.state.user_data.hak_akses === 1"></div>
                             <h3 class="text-center font-bold text-lg">Detail Mesin</h3>
                             <div class="info mt-5" v-if="!editMesin">
                                 <div class="kode text-lg">
@@ -126,7 +126,7 @@ onMounted(()=>{
                             </div>
                         </div>
                         <div class="w-2/3 bg-light b-shadow rounded-xl py-7 px-8">
-                            <div class="w-6 h-6 bg-main_blue float-right rounded hover:cursor-pointer" @click="editPenjelasan = !editPenjelasan"></div>
+                            <div class="w-6 h-6 bg-main_blue float-right rounded hover:cursor-pointer" @click="editPenjelasan = !editPenjelasan" v-if="$store.state.user_data.hak_akses === 1"></div>
                             <h3 class="text-center font-bold text-lg">Penjelasan Mesin</h3>
                             <div class="penjelasan mt-7 text-lg" v-if="!editPenjelasan">
                                 <div class="deskripsi">

@@ -59,7 +59,7 @@ onMounted(async()=>{
                 <div>
                     <div class="flex gap-7">
                         <div class="w-1/3 bg-light b-shadow py-7 px-8 rounded-xl">
-                            <div class="w-6 h-6 bg-main_blue float-right rounded hover:cursor-pointer" @click="$router.push({name:'EditJenisMesin',params:{_id:$route.params._id}})"></div>
+                            <div class="w-6 h-6 bg-main_blue float-right rounded hover:cursor-pointer" @click="$router.push({name:'EditJenisMesin',params:{_id:$route.params._id}})" v-if="$store.state.user_data.hak_akses === 1"></div>
                             <h3 class="text-center font-bold text-lg">Informasi Umum</h3>
                             <div class="info mt-3">
                                 <div class="kode text-lg">

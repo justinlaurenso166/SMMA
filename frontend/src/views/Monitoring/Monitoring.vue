@@ -32,17 +32,17 @@ const addMesinBaru = ref(false);
                     <div class="border w-9 h-9 rounded-full"></div>
                 </div>
             </header>
-            <section class="p-10 flex flex-col gap-9">
+            <section class="p-10 flex flex-col gap-7">
                 <div class="heading">
                     <h1 class="font-bold text-gray-200 text-4xl">Monitoring</h1>
                     <h1 class="font-medium text-gray-200 text-2xl mt-1.5">Monitoring / </h1>
                 </div>
 
                 <div>
-                    <div class="flex justify-end">
+                    <div class="flex justify-end" v-if="$store.state.user_data.hak_akses === 1">
                         <button class="text-light bg-main_blue text-xl px-6 py-3 rounded-xl" @click="addMesinBaru = true">Tambah +</button>
                     </div>
-                    <div class="py-6 mt-4 grid 2xl:grid-cols-2 gap-10 md:grid-cols-1">
+                    <div class="pb-6 pt-2 mt-4 grid 2xl:grid-cols-2 gap-10 md:grid-cols-1">
                         <div class="bg-light b-shadow rounded-xl hover:cursor-pointer" @click="$router.push({name: 'DetailMonitoring',params:{_id:'123'}})">
                             <div class="flex justify-between px-10 py-5 text-lg bg-green-100 shadow-lg">
                                 <p>Mesin 2281288</p>
