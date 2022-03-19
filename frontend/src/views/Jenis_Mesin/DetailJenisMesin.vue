@@ -1,6 +1,28 @@
 <script setup>
 import SideBar from "../../components/SideBar.vue"
+import axios from "axios"
+import { ref } from "@vue/reactivity"
+import { onMounted } from "@vue/runtime-core";
+import { useRoute } from "vue-router";
 
+const route = useRoute();
+
+//------------REACTIVE STATE-------------
+const jenis_mesin = ref([]);
+const id = route.params._id;
+
+async function getJenisMesinById(){
+    await axios.get(`/api/jenis_mesin/${id}`).then((response)=>{
+        console.log(response.data)
+        jenis_mesin.value = response.data
+    })
+}
+
+
+//mount first time
+onMounted(async()=>{
+    await getJenisMesinById();
+})
 </script>
 
 <style scoped>
@@ -42,44 +64,28 @@ import SideBar from "../../components/SideBar.vue"
                             <div class="info mt-3">
                                 <div class="kode text-lg">
                                     <h3 class="font-bold">Kode</h3>
-                                    <p class="">{{$route.params._id}}</p>
+                                    <p class="">{{jenis_mesin.kode_jenis_mesin}}</p>
                                 </div>
                                 <div class="nama text-lg mt-2">
                                     <h3 class="font-bold">Nama</h3>
-                                    <p class="">Motor-Besar</p>
+                                    <p class="">{{jenis_mesin.jenis_mesin}}</p>
                                 </div>
                                 <div class="desc text-lg mt-2">
                                     <h3 class="font-bold">Deskripsi</h3>
-                                    <p class="text-justify">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum quas delectus aliquid, nisi nulla iure. Ab praesentium obcaecati veniam sit. Et nihil ducimus quo fuga cumque expedita corporis libero placeat? Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro eveniet, officiis culpa aspernatur quaerat, saepe delectus adipisci quasi iusto praesentium minus eius hic repellendus iste quisquam quam, aperiam minima voluptas.</p>
+                                    <p class="text-justify">
+                                        {{jenis_mesin.spesifikasi}}
+                                    </p>
                                 </div>
                             </div>
                         </div>
                         <div class="w-2/3 bg-light b-shadow rounded-xl py-7 px-8 self-start">
                             <h3 class="text-center font-bold text-lg">Daftar Kerusakan</h3>
                             <div class="form mt-7">
-                                <div class="add_kerusakan">
-                                    <div class="flex gap-7">
-                                        <input type="text" placeholder="Tambah Kerusakan..." class="border border-main_blue rounded-xl px-4 py-1.5 w-full focus:outline-none">
-                                    <div class="text-4xl bg-main_blue text-light px-4 py-1 rounded-md"> + </div>
-                                    </div>
-                                </div>
                                 <div class="list mt-5 text-lg">
                                     <h3 class="font-bold">Kerusakan Mesin</h3>
-                                    <p>
-                                        <span>1. </span>
-                                        <span>Patah Baling-Baling</span>
-                                    </p>
-                                    <p>
-                                        <span>2. </span>
-                                        <span>Penggunaan Daya Berlebih</span>
-                                    </p>
-                                    <p>
-                                        <span>3. </span>
-                                        <span>Percepatan Melambat</span>
-                                    </p>
-                                    <p>
-                                        <span>4. </span>
-                                        <span>Peningkatan Suhu Mesin</span>
+                                    <p v-for="(kerusakan, idx) in jenis_mesin.kerusakan" :key="kerusakan._id">
+                                        <span>{{idx+1}}. </span>
+                                        <span>{{kerusakan.nama}}</span>
                                     </p>
                                 </div>
                             </div>

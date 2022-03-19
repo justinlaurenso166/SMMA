@@ -1,5 +1,77 @@
 <script setup>
 import SideBar from "../../components/SideBar.vue"
+import axios from "axios"
+import { reactive, ref } from "@vue/reactivity"
+import { onMounted } from "@vue/runtime-core";
+import ObjectId from "bson-objectid";
+import { createToast } from "mosha-vue-toastify";
+import "mosha-vue-toastify/dist/style.css";
+import { useRoute, useRouter } from "vue-router";
+
+const route = useRoute();
+const router = useRouter();
+
+//-----------REACTIVE STATE-------------------
+const jenis_mesin = reactive({
+    kode_jenis_mesin: "",
+    jenis_mesin: "",
+    spesifikasi: "",
+    kerusakan: [],
+})
+const new_kerusakan = ref("");
+
+
+const id = route.params._id;
+
+async function getJenisMesinById(){
+    await axios.get(`/api/jenis_mesin/${id}`).then((response)=>{
+        jenis_mesin.kode_jenis_mesin = response.data.kode_jenis_mesin;
+        jenis_mesin.jenis_mesin = response.data.jenis_mesin;
+        jenis_mesin.spesifikasi = response.data.spesifikasi;
+        jenis_mesin.kerusakan = response.data.kerusakan;
+    })
+}
+
+async function editJenisMesin(){
+    await axios.put(`/api/jenis_mesin/edit/${id}`,jenis_mesin).then((response)=>{
+        if(response.status === 200){
+            createToast(response.data,{
+                type: "success",
+                showCloseButton: true,
+                timeout: 3000,
+                showIcon: true,
+                transition: "zoom",
+            });
+            getJenisMesinById();
+            setTimeout(()=>{
+                router.push({name: "DetailJenisMesin"})
+            },3000)
+        }
+    })
+}
+
+
+function addKerusakan(){
+    if(new_kerusakan.value !== ''){
+        let new_data = {
+            _id: new ObjectId().toString(),
+            nama: new_kerusakan.value,
+        }
+        jenis_mesin.kerusakan.push(new_data);
+        new_kerusakan.value = "";
+        console.log(jenis_mesin.kerusakan)
+    }
+    else{
+        new_kerusakan.value = "";
+    }
+}
+
+
+
+onMounted(async()=>{
+    await getJenisMesinById();
+    // console.log(jenis_mesin)
+})
 
 </script>
 
@@ -39,24 +111,25 @@ import SideBar from "../../components/SideBar.vue"
                         <div class="w-1/3 bg-light b-shadow py-7 px-8 rounded-xl">
                             <h3 class="text-center font-bold text-lg">Informasi Umum</h3>
                             <div class="info mt-3">
-                                <div class="kode text-lg">
-                                    <h3 class="font-bold">Kode</h3>
-                                    <p class="">{{$route.params._id}}</p>
-                                </div>
-                                <div class="nama text-lg mt-2">
-                                    <h3 class="font-bold">Nama</h3>
-                                    <input type="text" value="Motor-Besar" class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl border-main_blue bg-gray-100 mt-1">
-                                    <!-- <p class="">Motor-Besar</p> -->
-                                </div>
-                                <div class="desc text-lg mt-2">
-                                    <h3 class="font-bold">Deskripsi</h3>
-                                    <textarea class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl border-main_blue bg-gray-100 mt-1" rows="15">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum quas delectus aliquid, nisi nulla iure. Ab praesentium obcaecati veniam sit. Et nihil ducimus quo fuga cumque expedita corporis libero placeat? Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro eveniet, officiis culpa aspernatur quaerat, saepe delectus adipisci quasi iusto praesentium minus eius hic repellendus iste quisquam quam, aperiam minima voluptas.
-                                    </textarea>
-                                </div>
+                                <form @submit.prevent="editJenisMesin">
+                                    <div class="kode text-lg">
+                                        <h3 class="font-bold">Kode</h3>
+                                        <input type="text" class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl border-main_blue bg-gray-100 mt-1" v-model="jenis_mesin.kode_jenis_mesin">
+                                    </div>
+                                    <div class="nama text-lg mt-2">
+                                        <h3 class="font-bold">Nama</h3>
+                                        <input type="text"  class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl border-main_blue bg-gray-100 mt-1" v-model="jenis_mesin.jenis_mesin">
+                                        <!-- <p class="">Motor-Besar</p> -->
+                                    </div>
+                                    <div class="desc text-lg mt-2">
+                                        <h3 class="font-bold">Deskripsi</h3>
+                                        <textarea class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl border-main_blue bg-gray-100 mt-1" rows="10" v-model="jenis_mesin.spesifikasi"></textarea>
+                                    </div>
 
-                                <div class="save_changes w-52 m-auto mt-5">
-                                    <button class="bg-main_blue text-light text-lg px-3 p-3 w-full rounded-xl">Save Changes</button>
-                                </div>
+                                    <div class="save_changes w-52 m-auto mt-5">
+                                        <button class="bg-main_blue text-light text-lg px-3 p-3 w-full rounded-xl">Save Changes</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                         <div class="w-2/3 bg-light b-shadow rounded-xl py-7 px-8 self-start">
@@ -64,27 +137,15 @@ import SideBar from "../../components/SideBar.vue"
                             <div class="form mt-7">
                                 <div class="add_kerusakan">
                                     <div class="flex gap-7">
-                                        <input type="text" placeholder="Tambah Kerusakan..." class="border border-main_blue rounded-xl px-4 py-1.5 w-full focus:outline-none">
-                                    <div class="text-4xl bg-main_blue text-light px-4 py-1 rounded-md"> + </div>
+                                        <input type="text" placeholder="Tambah Kerusakan..." class="border border-main_blue rounded-xl px-4 py-1.5 w-full focus:outline-none" v-model="new_kerusakan">
+                                    <div class="text-4xl bg-main_blue text-light px-4 py-1 rounded-md" @click="addKerusakan"> + </div>
                                     </div>
                                 </div>
                                 <div class="list mt-5 text-lg">
                                     <h3 class="font-bold">Kerusakan Mesin</h3>
-                                    <p>
-                                        <span>1. </span>
-                                        <span>Patah Baling-Baling</span>
-                                    </p>
-                                    <p>
-                                        <span>2. </span>
-                                        <span>Penggunaan Daya Berlebih</span>
-                                    </p>
-                                    <p>
-                                        <span>3. </span>
-                                        <span>Percepatan Melambat</span>
-                                    </p>
-                                    <p>
-                                        <span>4. </span>
-                                        <span>Peningkatan Suhu Mesin</span>
+                                    <p v-for="(kerusakan, idx) in jenis_mesin.kerusakan" :key="kerusakan._id">
+                                        <span>{{idx+1}}. </span>
+                                        <span>{{kerusakan.nama}}</span>
                                     </p>
                                 </div>
                             </div>

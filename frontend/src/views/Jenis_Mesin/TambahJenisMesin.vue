@@ -1,5 +1,55 @@
 <script setup>
 import SideBar from "../../components/SideBar.vue"
+import axios from "axios"
+import { reactive, ref } from "@vue/reactivity"
+import { onMounted } from "@vue/runtime-core";
+import ObjectId from "bson-objectid";
+import { createToast } from "mosha-vue-toastify";
+import "mosha-vue-toastify/dist/style.css";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+const jenis_mesin_baru = reactive({
+    kode_jenis_mesin: "",
+    jenis_mesin: "",
+    spesifikasi: "",
+    kerusakan: [],
+})
+
+const new_kerusakan = ref("");
+
+async function addJenisMesin(){
+    await axios.post(`/api/jenis_mesin/tambah`, jenis_mesin_baru).then((response)=>{
+        if(response.status === 200){
+            createToast(response.data,{
+                type: "success",
+                showCloseButton: true,
+                timeout: 3000,
+                showIcon: true,
+                transition: "zoom",
+            });
+            setTimeout(()=>{
+                router.push({name: "JenisMesin"})
+            },3000)
+        }
+    })
+}
+
+function addKerusakan(){
+    if(new_kerusakan.value !== ''){
+        let new_data = {
+            _id: new ObjectId().toString(),
+            nama: new_kerusakan.value,
+        }
+        jenis_mesin_baru.kerusakan.push(new_data);
+        new_kerusakan.value = "";
+        console.log(jenis_mesin_baru.kerusakan)
+    }
+    else{
+        new_kerusakan.value = "";
+    }
+}
 
 </script>
 
@@ -39,22 +89,24 @@ import SideBar from "../../components/SideBar.vue"
                         <div class="w-1/3 bg-light b-shadow py-7 px-8 rounded-xl">
                             <h3 class="text-center font-bold text-lg">Informasi Umum</h3>
                             <div class="info mt-3">
-                                <div class="kode text-lg">
-                                    <h3 class="font-bold">Kode</h3>
-                                    <p class="">MSN-007</p>
-                                </div>
-                                <div class="nama text-lg mt-2">
-                                    <h3 class="font-bold">Nama</h3>
-                                    <input type="text" class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl border-main_blue bg-gray-100 mt-1" placeholder="Nama Jenis Mesin...">
-                                </div>
-                                <div class="desc text-lg mt-2">
-                                    <h3 class="font-bold">Deskripsi</h3>
-                                    <textarea class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl border-main_blue bg-gray-100 mt-1" rows="10" placeholder="Deskripsi..."></textarea>
-                                </div>
+                                <form @submit.prevent="addJenisMesin">
+                                    <div class="kode text-lg">
+                                        <h3 class="font-bold">Kode</h3>
+                                        <input required type="text" class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl border-main_blue bg-gray-100 mt-1" placeholder="Kode Jenis Mesin..." v-model="jenis_mesin_baru.kode_jenis_mesin">
+                                    </div>
+                                    <div class="nama text-lg mt-2">
+                                        <h3 class="font-bold">Nama</h3>
+                                        <input required type="text" class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl border-main_blue bg-gray-100 mt-1" placeholder="Nama Jenis Mesin..." v-model="jenis_mesin_baru.jenis_mesin">
+                                    </div>
+                                    <div class="desc text-lg mt-2">
+                                        <h3 class="font-bold">Deskripsi</h3>
+                                        <textarea required class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl border-main_blue bg-gray-100 mt-1" rows="10" placeholder="Deskripsi..." v-model="jenis_mesin_baru.spesifikasi"></textarea>
+                                    </div>
 
-                                <div class="save_changes w-52 m-auto mt-5">
-                                    <button class="bg-main_blue text-light text-lg px-3 p-3 w-full rounded-xl">Save</button>
-                                </div>
+                                    <div class="save_changes w-52 m-auto mt-5">
+                                        <button class="bg-main_blue text-light text-lg px-3 p-3 w-full rounded-xl">Save</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                         <div class="w-2/3 bg-light b-shadow rounded-xl py-7 px-8 self-start">
@@ -62,15 +114,15 @@ import SideBar from "../../components/SideBar.vue"
                             <div class="form mt-7">
                                 <div class="add_kerusakan">
                                     <div class="flex gap-7">
-                                        <input type="text" placeholder="Tambah Kerusakan..." class="border border-main_blue rounded-xl px-4 py-1.5 w-full focus:outline-none">
-                                    <div class="text-4xl bg-main_blue text-light px-4 py-1 rounded-md"> + </div>
+                                        <input type="text" placeholder="Tambah Kerusakan..." class="border border-main_blue rounded-xl px-4 py-1.5 w-full focus:outline-none" v-model="new_kerusakan">
+                                    <div class="text-4xl bg-main_blue text-light px-4 py-1 rounded-md" @click="addKerusakan()"> + </div>
                                     </div>
                                 </div>
                                 <div class="list mt-5 text-lg">
                                     <h3 class="font-bold">Kerusakan Mesin</h3>
-                                    <p>
-                                        <span>1. </span>
-                                        <span></span>
+                                    <p v-for="(kerusakan, idx) in jenis_mesin_baru.kerusakan" :key="kerusakan._id">
+                                        <span>{{idx+1}}. </span>
+                                        <span>{{kerusakan.nama}}</span>
                                     </p>
                                 </div>
                             </div>

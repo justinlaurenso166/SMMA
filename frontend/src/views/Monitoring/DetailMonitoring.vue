@@ -120,6 +120,9 @@ onMounted(()=>{
                                     <h3 class="font-bold">Kode Sensor</h3>
                                     <input type="text" class="mt-1 border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full" value="SS-001">
                                 </div>
+                                <div class="w-44 m-auto mt-9">
+                                    <button class="bg-main_blue text-light text-lg py-2 px-4 rounded-md w-full">Save Changes</button>
+                                </div>
                             </div>
                         </div>
                         <div class="w-2/3 bg-light b-shadow rounded-xl py-7 px-8">
@@ -140,9 +143,12 @@ onMounted(()=>{
                                     <h3 class="font-bold">Deskripsi</h3>
                                     <textarea class="mt-2 border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full" rows="6" >Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam blanditiis laboriosam cum corrupti doloremque commodi quo, sint odio rem quisquam nisi maxime aspernatur et voluptatum. Velit laboriosam libero expedita unde. Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi mollitia laudantium eligendi ullam, dolore ipsa quia, eaque nisi amet recusandae est laborum minima earum pariatur porro, veritatis in necessitatibus et</textarea>
                                 </div>
-                                <div class="lokasi mt-5">
+                                <div class="lokasi mt-3">
                                     <h3 class="font-bold">Lokasi</h3>
                                     <textarea class="border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full mt-2" rows="4" >Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores unde in fugiat temporibus aliquid laborum harum mollitia enim cupiditate placeat, hic excepturi impedit! Debitis, illum accusantium. Consectetur, fuga. Error, ipsum.</textarea>
+                                </div>
+                                <div class="w-44 m-auto mt-7">
+                                    <button class="bg-main_blue text-light text-lg py-2 px-4 rounded-md w-full">Save Changes</button>
                                 </div>
                             </div>
                         </div>

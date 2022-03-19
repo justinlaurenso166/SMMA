@@ -8,6 +8,7 @@ const app = express()
 const MesinRoute = require("./routes/Mesin");
 const UserRoute = require("./routes/Login");
 const SensorsRoute = require("./routes/Sensors");
+const JenisMesinRoute = require("./routes/JenisMesin")
 
 // middleware
 app.use(bodyParser.json())
@@ -19,12 +20,13 @@ app.get("/", (req, res) => {
 app.use('/mesin', MesinRoute)
 app.use('/user', UserRoute)
 app.use('/sensor', SensorsRoute)
-    //start server
+app.use('/jenis_mesin', JenisMesinRoute)
+
+//start server
 app.listen(4000, () => {
     console.log("listeniing at port:4000")
 })
 
-// const uri = "mongodb+srv://justin:justin123@cluster0.mow2l.mongodb.net/monitoring";
 const uri = "mongodb+srv://justin123:justin123@cluster0.2a3rp.mongodb.net/mydb?retryWrites=true&w=majority";
 mongoose.connect(uri, {
         useNewUrlParser: true,
