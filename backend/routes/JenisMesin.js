@@ -1,7 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const JenisMesin = require("../models/JenisMesin")
+const Mesin = require("../models/Mesin")
 const mongoose = require("mongoose")
+const { off } = require('../models/JenisMesin')
 
 //all route
 router.get('/all', async(req, res) => {
@@ -15,11 +17,23 @@ router.get('/:id', async(req, res) => {
 })
 
 router.post('/tambah', async(req, res) => {
-    const new_data = new JenisMesin(req.body);
-    const save_data = await new_data.save();
-    if (save_data) {
-        res.status(200);
-        res.send("Berhasil menambahkan Jenis Mesin Baru")
+    const check_jenis_mesin = await JenisMesin.find({ kode_jenis_mesin: req.body.kode_jenis_mesin });
+    if (check_jenis_mesin.length > 0) {
+        res.status(500).send("Kode jenis mesin sudah tersedia")
+    } else {
+        let data = {
+            _id: mongoose.Types.ObjectId(),
+            kode_jenis_mesin: req.body.kode_jenis_mesin,
+            jenis_mesin: req.body.jenis_mesin,
+            spesifikasi: req.body.spesifikasi,
+            kerusakan: req.body.kerusakan,
+        }
+        const new_data = new JenisMesin(data);
+        const save_data = await new_data.save();
+        if (save_data) {
+            res.status(200);
+            res.send("Berhasil menambahkan Jenis Mesin Baru")
+        }
     }
 })
 
@@ -33,6 +47,26 @@ router.put('/edit/:id', async(req, res) => {
     const result = await JenisMesin.updateOne({ _id: req.params.id, }, { $set: req.body });
     res.status(200);
     res.send("Berhasil mengubah Jenis Mesin")
+})
+
+router.get("/daftar_mesin/:id", async(req, res) => {
+    const get_data = await Mesin.find({ id_jenis_mesin: req.params.id });
+    if (get_data) {
+        res.status(200)
+        res.json(get_data)
+    }
+})
+
+router.post('/search', async(req, res) => {
+    let search = req.query.search;
+
+    let search_jenis_mesin = await JenisMesin.find().where({
+        $or: [{ jenis_mesin: new RegExp(search, "i") }, { kode_jenis_mesin: new RegExp(search, "i") }]
+    }).exec();
+    if (search_jenis_mesin) {
+        res.status(200);
+        res.json(search_jenis_mesin)
+    }
 })
 
 module.exports = router

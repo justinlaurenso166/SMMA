@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const JenisMesinSchema = new mongoose.Schema({
+    _id: mongoose.Types.ObjectId,
     jenis_mesin: String,
     spesifikasi: String,
     kode_jenis_mesin: String,

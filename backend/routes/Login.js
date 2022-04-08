@@ -15,9 +15,20 @@ router.get('/all', async(req, res) => {
 })
 
 router.post('/adduser', async(req, res) => {
-    req.body._id = mongoose.Types.ObjectId();
-    const newUser = new Login(req.body);
-    res.json(await newUser.save())
+    let data = {
+        _id: mongoose.Types.ObjectId(),
+        username: req.body.username,
+        nama: req.body.nama,
+        password: req.body.password,
+        hak_akses: 2,
+        jabatan: "Karyawan",
+    }
+    const add_user = new Login(data);
+    const save_add_user = await add_user.save();
+    if (save_add_user) {
+        res.status(200)
+        res.send("Pengguna baru berhasil ditambahkan")
+    }
 })
 
 router.post('/login', async(req, res) => {
@@ -25,17 +36,63 @@ router.post('/login', async(req, res) => {
     const password = req.body.password;
     const userLogin = await Login.find({ username: username, password: password })
     if (userLogin.length > 0) {
-        // const token = jwt.sign(userLogin, process.env.JWT_KEY)
         res.status(200)
-            // res.sendStatus("Login Success")
         res.json(userLogin)
     } else {
-        res.status(403)
-            // res.sendStatus("No User Found")
-        res.json({
-            message: "Login failed ! Please check your username and password !"
-        })
+        res.status(500).send("User not found!");
     }
 })
+
+router.get('/get/:id', async(req, res) => {
+    const find_user = await Login.findById(req.params.id);
+    if (find_user) {
+        res.status(200)
+        res.json(find_user)
+    }
+})
+
+router.put('/edit/:id', async(req, res) => {
+    if (req.body.type === "username") {
+        let data = {
+            nama: req.body.nama,
+            username: req.body.username
+        }
+        const edit_user = await Login.updateOne({ _id: req.params.id }, { $set: data })
+        if (edit_user) {
+            res.status(200)
+            res.send("Data Pengguna berhasil diedit")
+        }
+    } else {
+        let data = {
+            password: req.body.new_password
+        }
+        const edit_user = await Login.updateOne({ _id: req.params.id }, { $set: data })
+        if (edit_user) {
+            res.status(200)
+            res.send("Password berhasil diganti")
+        }
+    }
+})
+
+router.delete("/delete/:id", async(req, res) => {
+    const delete_user = await Login.findByIdAndDelete(req.params.id)
+    if (delete_user) {
+        res.status(200)
+        res.send("Data penguna berhasil dihapus")
+    }
+})
+
+router.post('/search', async(req, res) => {
+    let search = req.query.search;
+
+    let search_user = await Login.find().where({
+        $or: [{ nama: new RegExp(search, "i") }, { username: new RegExp(search, "i") }]
+    }).exec();
+    if (search_user) {
+        res.status(200);
+        res.json(search_user)
+    }
+})
+
 
 module.exports = router
