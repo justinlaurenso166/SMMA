@@ -2,7 +2,7 @@
 import { ref } from "@vue/reactivity";
 import { onMounted } from "@vue/runtime-core";
 import VueApexChart from "vue3-apexcharts";
-const props = defineProps(['health']);
+const props = defineProps(["health","labels","indikasi"]);
 
 const color = ref("");
 if(props.health === 100){
@@ -15,33 +15,48 @@ if(props.health === 100){
 
 var chartOptions = {
   chart: {
-    height: 350,
     type: "radialBar",
   },
   colors: [color.value],
   series: [props.health],
-  labels: ["HEALTHY"],
+  labels: [props.labels],
   plotOptions: {
     radialBar: {
+      startAngle: -90,
+      endAngle: 90,
+      track: {
+        background: "#dfefff",
+        startAngle: -90,
+        endAngle: 90,
+      },
       dataLabels: {
-        showOn: "always",
         name: {
-          offsetY: -20,
+          offsetY: 0,
           show: true,
           color: "#1a1d29",
-          fontSize: "15px",
-          fontFamily: 'Noto Sans',
+          fontSize: "25px"
         },
         value: {
-          color: "#111",
-          fontSize: "45px",
-          fontWeight: "700",
-          fontFamily: 'Noto Sans',
-          show: true,
+          fontSize: "30px",
+          FontFace: "NotoSans",
+          show: false,
         },
       },
     },
   },
+  fill: {
+    type: "gradient",
+    gradient: {
+      shade: "dark",
+      type: "horizontal",
+      // gradientToColors: ["#F25F33","#FFF000", "#61FF00"],
+      stops: [0, 100],
+    },
+  },
+  responsive: [{
+    breakpoint: 1000,
+    options: {},
+  }]
 };
 
 onMounted(() => {});
@@ -51,7 +66,8 @@ onMounted(() => {});
   <div>
     <vue-apex-chart
       width="100%"
-      height="350"
+      height="400px"
+      style="margin-top: -0px !important"
       type="radialBar"
       :options="chartOptions"
       :series="chartOptions.series"

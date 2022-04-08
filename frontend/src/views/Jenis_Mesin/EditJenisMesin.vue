@@ -7,6 +7,8 @@ import ObjectId from "bson-objectid";
 import { createToast } from "mosha-vue-toastify";
 import "mosha-vue-toastify/dist/style.css";
 import { useRoute, useRouter } from "vue-router";
+import modal from "../../components/ModalConfirm.vue"
+import Header from "../../components/Header.vue"
 
 const route = useRoute();
 const router = useRouter();
@@ -19,35 +21,47 @@ const jenis_mesin = reactive({
     kerusakan: [],
 })
 const new_kerusakan = ref("");
-
+const daftar_mesin = ref([]);
+const showDeleteKerusakanBox = ref(false)
+const showDeleteMesinBox = ref(false);
+const kerusakan_id = ref("");
+const remove_mesin_id = ref("");
 
 const id = route.params._id;
 
 async function getJenisMesinById(){
-    await axios.get(`/api/jenis_mesin/${id}`).then((response)=>{
-        jenis_mesin.kode_jenis_mesin = response.data.kode_jenis_mesin;
-        jenis_mesin.jenis_mesin = response.data.jenis_mesin;
-        jenis_mesin.spesifikasi = response.data.spesifikasi;
-        jenis_mesin.kerusakan = response.data.kerusakan;
-    })
+    try {
+        await axios.get(`/api/jenis_mesin/${id}`).then((response)=>{
+            jenis_mesin.kode_jenis_mesin = response.data.kode_jenis_mesin;
+            jenis_mesin.jenis_mesin = response.data.jenis_mesin;
+            jenis_mesin.spesifikasi = response.data.spesifikasi;
+            jenis_mesin.kerusakan = response.data.kerusakan;
+        })
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 async function editJenisMesin(){
-    await axios.put(`/api/jenis_mesin/edit/${id}`,jenis_mesin).then((response)=>{
-        if(response.status === 200){
-            createToast(response.data,{
-                type: "success",
-                showCloseButton: true,
-                timeout: 3000,
-                showIcon: true,
-                transition: "zoom",
-            });
-            getJenisMesinById();
-            setTimeout(()=>{
-                router.push({name: "DetailJenisMesin"})
-            },3000)
-        }
-    })
+    try {
+        await axios.put(`/api/jenis_mesin/edit/${id}`,jenis_mesin).then((response)=>{
+            if(response.status === 200){
+                createToast(response.data,{
+                    type: "success",
+                    showCloseButton: true,
+                    timeout: 3000,
+                    showIcon: true,
+                    transition: "zoom",
+                });
+                getJenisMesinById();
+                setTimeout(()=>{
+                    router.push({name: "DetailJenisMesin"})
+                },3000)
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 
@@ -66,10 +80,46 @@ function addKerusakan(){
     }
 }
 
+function removeKerusakan(){
+    jenis_mesin.kerusakan = jenis_mesin.kerusakan.filter((item)=>item._id !== kerusakan_id.value)
+    showDeleteKerusakanBox.value = false;
+}
 
+async function getDaftarMesin(){
+    try {
+        await axios.get('/api/jenis_mesin/daftar_mesin/'+id).then((res)=>{
+            console.log(res.data)
+            daftar_mesin.value = res.data
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+async function removeMesin(){
+    console.log(remove_mesin_id)
+    let data = daftar_mesin.value.filter((item)=>item._id === remove_mesin_id.value);
+    if(data[0]){
+        data[0].id_jenis_mesin = null;
+        data[0].jenis_mesin = "";
+    }
+    try {
+        axios.put('/api/mesin/remove/'+remove_mesin_id.value, data[0]).then((res)=>{
+            if(res.status === 200){
+                console.log(res.data)
+                daftar_mesin.value = daftar_mesin.value.filter((item)=>item._id!== remove_mesin_id.value)
+                showDeleteMesinBox.value = false;
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+
+}
 
 onMounted(async()=>{
     await getJenisMesinById();
+    await getDaftarMesin();
     // console.log(jenis_mesin)
 })
 
@@ -79,6 +129,9 @@ onMounted(async()=>{
     .b-shadow{
         box-shadow: 3px 5px 6px rgba(0, 0, 0, 0.25);
     }
+    input[type=text]:disabled{
+        background-color: #cacaca;
+    }
 </style>
 
 <template>
@@ -87,17 +140,7 @@ onMounted(async()=>{
             <SideBar />
         </div>
         <div class="w-full overflow-y-auto h-screen">
-            <header class="bg-light px-7 py-5 flex justify-between sticky top-0 z-50" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);">
-                <div>
-                    <input type="text" placeholder="Search For..." class="border border-main_blue px-3 py-1.5 rounded-md w-80 text-xl focus:outline-none">
-                </div>
-                <div class="flex items-center">
-                    <span class="capitalize mr-5 text-2xl font-medium">
-                        {{$store.state.user_data.username}}
-                    </span>
-                    <div class="border w-9 h-9 rounded-full"></div>
-                </div>
-            </header>
+            <Header />
             <section class="p-10 flex flex-col gap-9">
                 <div class="heading">
                     <h1 class="font-bold text-gray-200 text-4xl">Jenis Mesin</h1>
@@ -107,29 +150,44 @@ onMounted(async()=>{
                 </div>
 
                 <div>
-                    <div class="flex gap-7">
-                        <div class="w-1/3 bg-light b-shadow py-7 px-8 rounded-xl">
+                    <div class="flex justify-end" v-if="$store.state.user_data.hak_akses === 1">
+                        <button class="bg-main_blue text-light text-lg px-3 p-3 w-1/5 rounded-xl" @click="editJenisMesin()">Save Changes</button>
+                    </div>
+                    <div class="flex gap-7 mt-6">
+                        <div class="w-1/3 ">
+                        <div class="bg-light b-shadow py-7 px-8 rounded-xl">
                             <h3 class="text-center font-bold text-lg">Informasi Umum</h3>
                             <div class="info mt-3">
-                                <form @submit.prevent="editJenisMesin">
+                                <form>
                                     <div class="kode text-lg">
                                         <h3 class="font-bold">Kode</h3>
-                                        <input type="text" class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl border-main_blue bg-gray-100 mt-1" v-model="jenis_mesin.kode_jenis_mesin">
+                                        <input type="text" class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl border-main_blue bg-gray-100 mt-1 hover:cursor-not-allowed" v-model="jenis_mesin.kode_jenis_mesin" disabled>
                                     </div>
                                     <div class="nama text-lg mt-2">
                                         <h3 class="font-bold">Nama</h3>
                                         <input type="text"  class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl border-main_blue bg-gray-100 mt-1" v-model="jenis_mesin.jenis_mesin">
-                                        <!-- <p class="">Motor-Besar</p> -->
                                     </div>
                                     <div class="desc text-lg mt-2">
                                         <h3 class="font-bold">Deskripsi</h3>
                                         <textarea class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl border-main_blue bg-gray-100 mt-1" rows="10" v-model="jenis_mesin.spesifikasi"></textarea>
                                     </div>
-
-                                    <div class="save_changes w-52 m-auto mt-5">
+                                    <!-- <div class="save_changes w-52 m-auto mt-5">
                                         <button class="bg-main_blue text-light text-lg px-3 p-3 w-full rounded-xl">Save Changes</button>
-                                    </div>
+                                    </div> -->
                                 </form>
+                            </div>
+                        </div>
+                        <div class="bg-light b-shadow w-full px-8 py-6 mt-8 rounded-xl">
+                                <div class="list_mesin">
+                                    <h3 class="text-center font-bold text-lg mb-4">Daftar Mesin Monitoring</h3>
+                                    <p v-for="(daftar, idx) in daftar_mesin" :key="daftar._id" class="mt-2">
+                                        <span class="border mr-3 hover:cursor-pointer" @click="remove_mesin_id = daftar._id; showDeleteMesinBox = true">
+                                            <img src="../../assets/svg/Cross.svg" class="inline -mt-1">
+                                        </span>
+                                        <span>{{idx+1}}. </span>
+                                        <span>{{daftar.nama_mesin}}</span>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                         <div class="w-2/3 bg-light b-shadow rounded-xl py-7 px-8 self-start">
@@ -143,7 +201,10 @@ onMounted(async()=>{
                                 </div>
                                 <div class="list mt-5 text-lg">
                                     <h3 class="font-bold">Kerusakan Mesin</h3>
-                                    <p v-for="(kerusakan, idx) in jenis_mesin.kerusakan" :key="kerusakan._id">
+                                    <p v-for="(kerusakan, idx) in jenis_mesin.kerusakan" :key="kerusakan._id" class="mt-2">
+                                        <span class="border mr-3 hover:cursor-pointer" @click="kerusakan_id = kerusakan._id; showDeleteKerusakanBox = true;">
+                                            <img src="../../assets/svg/Cross.svg" class="inline -mt-1">
+                                        </span>
                                         <span>{{idx+1}}. </span>
                                         <span>{{kerusakan.nama}}</span>
                                     </p>
@@ -152,6 +213,36 @@ onMounted(async()=>{
                         </div>
                     </div>
                 </div>
+                <modal v-if="showDeleteKerusakanBox">
+                    <template v-slot:header>
+                        <h1 class="text-center text-2xl font-bold text-main_blue">Konfimasi Penghapusan</h1>
+                    </template>
+                    <template v-slot:body>
+                        <div class="mt-8">
+                            <h3 class="text-xl text-center font-semibold">Apakah Anda yakin ingin menghapus kerusakan mesin ini ?</h3>
+                            <p class="text-center text-lg font-medium mt-2">Data akan terhapus selamanya</p>
+                            <div class="flex gap-12 mt-10">
+                                <button class="flex-1 bg-red-200 text-light text-lg text-semibold py-2.5 rounded-lg" @click="showDeleteKerusakanBox = false">Batal</button>
+                                <button class="flex-1 bg-main_blue text-light text-lg text-semibold py-2.5 rounded-lg" @click="removeKerusakan()">Ya, hapus data ini</button>
+                            </div>
+                        </div>
+                    </template>
+                </modal>
+                <modal v-if="showDeleteMesinBox">
+                    <template v-slot:header>
+                        <h1 class="text-center text-2xl font-bold text-main_blue">Konfimasi Penghapusan</h1>
+                    </template>
+                    <template v-slot:body>
+                        <div class="mt-8">
+                            <h3 class="text-xl text-center font-semibold">Apakah Anda yakin ingin menghapus monitoring mesin dari jenis mesin ini ?</h3>
+                            <p class="text-center text-lg font-medium mt-2">Data akan terhapus selamanya</p>
+                            <div class="flex gap-12 mt-10">
+                                <button class="flex-1 bg-red-200 text-light text-lg text-semibold py-2.5 rounded-lg" @click="showDeleteMesinBox = false">Batal</button>
+                                <button class="flex-1 bg-main_blue text-light text-lg text-semibold py-2.5 rounded-lg" @click="removeMesin()">Ya, hapus data ini</button>
+                            </div>
+                        </div>
+                    </template>
+                </modal>
             </section>
         </div>
     </div>

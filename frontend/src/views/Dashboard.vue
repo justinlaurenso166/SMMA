@@ -1,7 +1,77 @@
 <script setup>
 import SideBar from "../components/SideBar.vue"
+import Header from "../components/Header.vue"
 import LineChart from "../components/Chart/LineChart.vue"
+import radial from "../components/Chart/radialBarDashboard.vue"
+import axios from "axios"
+import { reactive, ref } from "@vue/reactivity"
+import { onMounted, watch } from "@vue/runtime-core"
 
+const jenis_mesin = ref([]);
+const mesin = ref([]);
+const user = ref([]);
+const mesin_anomali = ref([]);
+const data_anomali = reactive({
+    id_mesin_anomali: "",
+    data_sensor: [],
+})
+const id_mesin_anomali = ref("");
+const data_sensor = ref([]);
+
+async function getJenisMesin(){
+    try {
+        await axios.get('/api/jenis_mesin/all').then((response)=>{
+            console.log(response.data)
+            jenis_mesin.value = response.data;
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+async function getAllMonitoring(){
+    try {
+        await axios.get("/api/mesin/all").then((response)=>{
+            mesin.value = response.data
+            mesin_anomali.value = mesin.value.filter((item)=>item.sensor_ai.latest_data_ai[0].kondisi_kesehatan === 50)
+            console.log(response.data)
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const getListUser = async()=>{
+    try {
+        await axios.get('/api/user/all').then((res)=>{
+            user.value = res.data.filter((item)=>item.hak_akses !== 1);
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+watch(()=>data_anomali.id_mesin_anomali, async function(){
+    data_anomali.data_sensor = [];
+    await getAllMonitoring();
+    let filter = mesin.value.filter((item)=>item._id === data_anomali.id_mesin_anomali)
+    data_anomali.data_sensor = filter[0].sensor_result.data_sensor;
+})
+
+
+
+onMounted(async()=>{
+    // setInterval(()=>{
+    //     if(mesin_anomali.value.length > 0){
+    //         console.log("Gagal")
+    //     }
+    // }, 3000)
+    await getJenisMesin();
+    await getAllMonitoring();
+    await getListUser();
+    data_anomali.id_mesin_anomali = mesin_anomali.value[0]._id
+    data_anomali.data_sensor = mesin_anomali.value[0].sensor_result.data_sensor;
+})
 </script>
 
 <style scoped>
@@ -19,41 +89,31 @@ import LineChart from "../components/Chart/LineChart.vue"
             <SideBar />
         </div>
         <div class="w-full overflow-y-auto h-screen">
-            <header class="bg-light px-7 py-5 flex justify-between sticky top-0 z-50" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);">
-                <div>
-                    <input type="text" placeholder="Search For..." class="border border-main_blue px-3 py-1.5 rounded-md w-80 text-xl focus:outline-none">
-                </div>
-                <div class="flex items-center">
-                    <span class="capitalize mr-5 text-2xl font-medium">
-                        {{$store.state.user_data.username}}
-                    </span>
-                    <div class="border w-9 h-9 rounded-full"></div>
-                </div>
-            </header>
+            <Header />
             <section class="p-10 flex flex-col gap-9">
                 <div class="heading">
                     <h1 class="font-bold text-gray-200 text-4xl">Dashboard</h1>
                     <h1 class="font-medium text-gray-200 text-2xl mt-1.5">Dashboard / </h1>
                 </div>
                 <div class="detail">
-                    <div class="grid lg:grid-cols-4 gap-7 grid-cols-1">
+                    <div class="grid 2xl:grid-cols-4 lg:grid-cols-2 gap-7 grid-cols-1">
                         <div class="bg-light rounded-2xl b-shadow">
-                            <div class="side w-10 bg-main_blue h-full float-left rounded-lg"></div>
+                            <div class="side w-10 h-full float-left rounded-lg" style="background-color: #61FF00"></div>
                             <div class="flex items-center px-7 justify-center">
-                                <span class="number text-main_black" style="font-size: 70px">2</span>
+                                <span class="number text-main_black" style="font-size: 70px">{{jenis_mesin.length > 0 ? jenis_mesin.length : 0}}</span>
                                 <div class="desc px-7 text-lg font-bold text-main_black">Jenis Mesin</div>
                             </div>
                         </div>
                         <div class="bg-light rounded-2xl b-shadow">
-                            <div class="side w-10 bg-main_blue h-full float-left rounded-lg"></div>
+                            <div class="side w-10 h-full float-left rounded-lg" style="background-color: #EBFF00"></div>
                             <div class="flex items-center px-7 justify-center">
-                                <span class="number text-main_black" style="font-size: 70px">6</span>
+                                <span class="number text-main_black" style="font-size: 70px">{{mesin.length > 0 ? mesin.length : 0}}</span>
                                 <div class="desc px-7 text-lg font-bold text-main_black">Monitoring Mesin</div>
                             </div>
                         </div>
                         <div class="bg-light rounded-2xl b-shadow">
-                            <div class="side w-10 bg-main_blue h-full float-left rounded-lg"></div>
-                            <div class="flex flex-col items-center px-7 justify-center h-full">
+                            <div class="side w-10 h-full float-left rounded-lg" style="background-color: #00D1D1"></div>
+                            <div class="flex flex-col items-center px-7 py-7 justify-center h-full">
                                 <span class="desc text-lg font-bold text-main_black">Kesehatan Mesin</span>
                                 <div class="w-full h-7 mt-2 border rounded-lg bar-cont">
                                     <div class="bar w-3/4 h-full rounded-lg"></div>
@@ -61,53 +121,41 @@ import LineChart from "../components/Chart/LineChart.vue"
                             </div>
                         </div>
                         <div class="bg-light rounded-2xl b-shadow">
-                            <div class="side w-10 bg-main_blue h-full float-left rounded-lg"></div>
+                            <div class="side w-10 h-full float-left rounded-lg" style="background-color: #FFD600"></div>
                             <div class="flex items-center px-7 justify-center">
-                                <span class="number text-main_black" style="font-size: 70px">1</span>
+                                <span class="number text-main_black" style="font-size: 70px">{{user.length > 0 ? user.length : 0}}</span>
                                 <div class="desc px-7 text-lg font-bold text-main_black">Pengguna</div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="mesin">
-                    <div class="grid grid-cols-3 gap-7">
+                    <div class="grid 2xl:grid-cols-2 gap-7">
                         <div class="bg-light b-shadow py-6 px-7 rounded-2xl">
-                            <h3 class="text-left font-bold text-xl">Jenis Mesin</h3>
+                            <h3 class="font-bold text-xl text-center relative">
+                                Jenis Mesin
+                                <span class="absolute right-0 text-sm mt-2 italic underline hover:cursor-pointer" @click="$router.push({name: 'JenisMesin'})">Lihat lainnya ></span>
+                            </h3>
                             <div class="list mt-4 text-lg">
-                                <div class="flex justify-between">
+                                <div class="flex justify-between" v-for="(daftar_mesin, idx) in jenis_mesin" :key="idx">
                                     <p>
-                                        <span>1. </span>
-                                        <span>Motor Besar</span>
+                                        <span>{{idx+1}}. </span>
+                                        <span>{{daftar_mesin.jenis_mesin}}</span>
                                     </p>
-                                    <p>3</p>
-                                </div>
-                                <div class="flex justify-between">
-                                    <p>
-                                        <span>2. </span>
-                                        <span>Motor Sedang</span>
-                                    </p>
-                                    <p>3</p>
+                                    <!-- <p>3</p> -->
                                 </div>
                             </div>
                         </div>
                         <div class="bg-light b-shadow py-6 px-7 rounded-2xl">
-                            <h3 class="text-left font-bold text-xl">Monitoring</h3>
+                            <h3 class="font-bold text-xl text-center relative">
+                                Monitoring
+                                <span class="absolute right-0 text-sm mt-2 italic underline hover:cursor-pointer" @click="$router.push({name: 'Monitoring'})">Lihat lainnya ></span>
+                            </h3>
                             <div class="list mt-4 text-lg">
-                                <div v-for="i in 6" :key="i">
+                                <div v-for="(msn,i) in mesin" :key="i">
                                     <p>
-                                        <span>{{i}}. </span>
-                                        <span>Mesin 2281288</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-light b-shadow py-6 px-7 rounded-2xl">
-                            <h3 class="text-left font-bold text-xl">Pemberitahuan</h3>
-                            <div class="list mt-4 text-lg">
-                                <div v-for="i in 3" :key="i">
-                                    <p>
-                                        <span>{{i}}. </span>
-                                        <span>Terjadi Anomali Pada Mesin RITI3200</span>
+                                        <span>{{i+1}}. </span>
+                                        <span>{{msn.nama_mesin}}</span>
                                     </p>
                                 </div>
                             </div>
@@ -116,40 +164,29 @@ import LineChart from "../components/Chart/LineChart.vue"
                 </div>
                 <div class="kesehatan">
                     <div class="bg-light b-shadow py-6 px-7 rounded-2xl">
-                            <h3 class="text-left font-bold text-xl">Kesehatan Mesin</h3>
-                            <div class="list mt-4 text-lg">
-                                <div class="mt-3">
-                                    <h3>Mesin RITI3200</h3>
-                                    <div class="w-full h-7 mt-2 border rounded-lg">
-                                        <div class="bar w-3/4 h-full rounded-lg"></div>
-                                    </div>
-                                </div>
-                                <div class="mt-3">
-                                    <h3>Mesin RITI3200</h3>
-                                    <div class="w-full h-7 mt-2 border rounded-lg">
-                                        <div class="bar w-2/4 h-full rounded-lg"></div>
-                                    </div>
-                                </div>
-                                <div class="mt-3">
-                                    <h3>Mesin RITI3200</h3>
-                                    <div class="w-full h-7 mt-2 border rounded-lg">
-                                        <div class="bar w-1/3 h-full rounded-lg"></div>
-                                    </div>
-                                </div>
-                                <div class="mt-3">
-                                    <h3>Mesin RITI3200</h3>
-                                    <div class="w-full h-7 mt-2 border rounded-lg">
-                                        <div class="bar w-3/5 h-full rounded-lg"></div>
-                                    </div>
+                            <h3 class="text-center font-bold text-xl relative">
+                                Kesehatan Mesin
+                                <span class="absolute right-0 text-sm mt-2 italic underline hover:cursor-pointer" @click="$router.push({name: 'Monitoring'})">Lihat lainnya ></span>
+                            </h3>
+                            <div class="list mt-9 text-lg grid 2xl:grid-cols-4 md:grid-cols-2 gap-8">
+                                <div v-for="(msn,i) in mesin" :key="i" class="relative">
+                                    <radial :health="msn.sensor_ai.latest_data_ai[0].kondisi_kesehatan" :labels="msn.nama_mesin" :indikasi="msn.sensor_ai.latest_data_ai[0].indikasi_kerusakan"></radial>
+                                    <p class="text-center -mt-20">{{msn.sensor_ai.latest_data_ai[0].indikasi_kerusakan}}</p>
                                 </div>
                             </div>
                     </div>
                 </div>
-                <div class="chart">
+                <div class="chart" v-if="mesin_anomali.length > 0">
                     <div class="bg-light b-shadow py-6 px-7 rounded-2xl">
                         <h3 class="text-left font-bold text-xl">Mesin membutuhkan Perhatian</h3>
                         <div class="flex justify-between">
-                            <h3 class="text-xl my-4">Mesin RITI3200 </h3>
+                            <h3 class="text-xl my-4">
+                                <select v-model="data_anomali.id_mesin_anomali">
+                                    <option v-for="anomali in mesin_anomali" :key="anomali._id" :value="anomali._id" @click="changeGraphic(anomali._id)">
+                                        {{anomali.nama_mesin}}
+                                    </option>
+                                </select>
+                            </h3>
                             <div>
                                 <select class="cursor-pointer focus:outline-none text-xl">
                                     <option>Percepatan</option>
@@ -158,8 +195,8 @@ import LineChart from "../components/Chart/LineChart.vue"
                                 </select>
                             </div>
                         </div>
-                        <div>
-                            <line-chart></line-chart>
+                        <div v-if="data_anomali.data_sensor.length > 0">
+                            <line-chart :data_sensor="data_anomali.data_sensor"></line-chart>
                         </div>
                     </div>
                 </div>

@@ -7,6 +7,7 @@ import ObjectId from "bson-objectid";
 import { createToast } from "mosha-vue-toastify";
 import "mosha-vue-toastify/dist/style.css";
 import { useRouter } from "vue-router";
+import Header from "../../components/Header.vue"
 
 const router = useRouter();
 
@@ -16,24 +17,43 @@ const jenis_mesin_baru = reactive({
     spesifikasi: "",
     kerusakan: [],
 })
+const alert = reactive({
+    error: false,
+})
 
 const new_kerusakan = ref("");
 
 async function addJenisMesin(){
-    await axios.post(`/api/jenis_mesin/tambah`, jenis_mesin_baru).then((response)=>{
-        if(response.status === 200){
-            createToast(response.data,{
-                type: "success",
+    // console.log(jenis_mesin_baru)
+    try {
+        await axios.post(`/api/jenis_mesin/tambah`, jenis_mesin_baru).then((response)=>{
+            if(response.status === 200){
+                console.log(response.data)
+                createToast(response.data,{
+                    type: "success",
+                    showCloseButton: true,
+                    timeout: 3000,
+                    showIcon: true,
+                    transition: "zoom",
+                });
+                setTimeout(()=>{
+                    router.push({name: "JenisMesin"})
+                },3000)
+            }
+        })
+    } catch (error) {
+        if(error.response){
+            console.log(error.response.data)
+            alert.error = true;
+            // setTimeout(()=>{})
+            createToast(error.response.data,{
+                toastBackgroundColor: "red",
                 showCloseButton: true,
                 timeout: 3000,
-                showIcon: true,
                 transition: "zoom",
             });
-            setTimeout(()=>{
-                router.push({name: "JenisMesin"})
-            },3000)
         }
-    })
+    }
 }
 
 function addKerusakan(){
@@ -65,17 +85,7 @@ function addKerusakan(){
             <SideBar />
         </div>
         <div class="w-full overflow-y-auto h-screen">
-            <header class="bg-light px-7 py-5 flex justify-between sticky top-0 z-50" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);">
-                <div>
-                    <input type="text" placeholder="Search For..." class="border border-main_blue px-3 py-1.5 rounded-md w-80 text-xl focus:outline-none">
-                </div>
-                <div class="flex items-center">
-                    <span class="capitalize mr-5 text-2xl font-medium">
-                        {{$store.state.user_data.username}}
-                    </span>
-                    <div class="border w-9 h-9 rounded-full"></div>
-                </div>
-            </header>
+            <Header />
             <section class="p-10 flex flex-col gap-9">
                 <div class="heading">
                     <h1 class="font-bold text-gray-200 text-4xl">Jenis Mesin</h1>
@@ -89,10 +99,10 @@ function addKerusakan(){
                         <div class="w-1/3 bg-light b-shadow py-7 px-8 rounded-xl">
                             <h3 class="text-center font-bold text-lg">Informasi Umum</h3>
                             <div class="info mt-3">
-                                <form @submit.prevent="addJenisMesin">
+                                <form @submit.prevent="addJenisMesin()">
                                     <div class="kode text-lg">
                                         <h3 class="font-bold">Kode</h3>
-                                        <input required type="text" class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl border-main_blue bg-gray-100 mt-1" placeholder="Kode Jenis Mesin..." v-model="jenis_mesin_baru.kode_jenis_mesin">
+                                        <input required type="text" class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl bg-gray-100 mt-1" :class="alert.error ? 'border-red-200' : 'border-main_blue'" placeholder="Kode Jenis Mesin..." v-model="jenis_mesin_baru.kode_jenis_mesin">
                                     </div>
                                     <div class="nama text-lg mt-2">
                                         <h3 class="font-bold">Nama</h3>
@@ -100,7 +110,7 @@ function addKerusakan(){
                                     </div>
                                     <div class="desc text-lg mt-2">
                                         <h3 class="font-bold">Deskripsi</h3>
-                                        <textarea required class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl border-main_blue bg-gray-100 mt-1" rows="10" placeholder="Deskripsi..." v-model="jenis_mesin_baru.spesifikasi"></textarea>
+                                        <textarea class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl border-main_blue bg-gray-100 mt-1" rows="10" placeholder="Deskripsi..." v-model="jenis_mesin_baru.spesifikasi"></textarea>
                                     </div>
 
                                     <div class="save_changes w-52 m-auto mt-5">

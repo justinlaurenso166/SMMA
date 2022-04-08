@@ -7,6 +7,7 @@ import EditJenisMesin from "../views/Jenis_Mesin/EditJenisMesin.vue"
 import TambahJenisMesin from "../views/Jenis_Mesin/TambahJenisMesin.vue"
 import Monitoring from "../views/Monitoring/Monitoring.vue"
 import DetailMonitoring from "../views/Monitoring/DetailMonitoring.vue"
+import UserSetting from "../views/UserSetting.vue"
 import Login from "../views/Login.vue"
 import store from "../store"
 
@@ -20,6 +21,7 @@ const routes = [
     { path: "/jenis_mesin/add", name: "TambahJenisMesin", component: TambahJenisMesin },
     { path: "/monitoring", name: "Monitoring", component: Monitoring },
     { path: "/monitoring/:_id", name: "DetailMonitoring", component: DetailMonitoring },
+    { path: "/user_setting", name: "UserSetting", component: UserSetting }
 ];
 
 const router = createRouter({
