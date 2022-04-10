@@ -91,7 +91,7 @@ async function search(){
                             <div class="text-main_blue">
                                 <h1 class="text-center font-bold text-lg">Pemberitahuan</h1>
                                 <div class="mt-3">
-                                    <p v-for="(anomali, i) in $store.state.mesin_anomali" :key="i" @click="$router.push({name:'DetailMonitoring', params:{_id: anomali._id}})">
+                                    <p v-for="(anomali, i) in $store.state.mesin_anomali" :key="i" @click="$router.push({name:'DetailMonitoring', params:{_id: anomali._id}})" class="hover:cursor-pointer">
                                         <span>{{i+1}}. </span>
                                         <span class="text-main_blue text-base">{{anomali.sensor_ai.latest_data_ai[0].kondisi_kesehatan === 50 ? 'Terjadi anomali pada mesin ' : 'Terjadi kegagalan pada mesin '}}{{anomali.kode_mesin}}</span>
                                     </p>

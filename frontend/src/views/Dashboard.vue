@@ -17,6 +17,10 @@ const data_anomali = reactive({
 })
 const id_mesin_anomali = ref("");
 const data_sensor = ref([]);
+const filter = reactive({
+    chart: "all",
+})
+const avg_kesehatan = ref(0)
 
 async function getJenisMesin(){
     try {
@@ -34,7 +38,15 @@ async function getAllMonitoring(){
         await axios.get("/api/mesin/all").then((response)=>{
             mesin.value = response.data
             mesin_anomali.value = mesin.value.filter((item)=>item.sensor_ai.latest_data_ai[0].kondisi_kesehatan === 50)
-            console.log(response.data)
+            
+            let sum = 0;
+            mesin.value.forEach((e)=>{
+                sum = sum += e.sensor_ai.latest_data_ai[0].kondisi_kesehatan;
+            })
+            console.log(sum)
+            avg_kesehatan.value = sum / mesin.value.length;
+            console.log(avg_kesehatan)
+            // console.log(response.data)
         })
     } catch (error) {
         console.log(error)
@@ -52,6 +64,13 @@ const getListUser = async()=>{
 }
 
 watch(()=>data_anomali.id_mesin_anomali, async function(){
+    data_anomali.data_sensor = [];
+    await getAllMonitoring();
+    let filter = mesin.value.filter((item)=>item._id === data_anomali.id_mesin_anomali)
+    data_anomali.data_sensor = filter[0].sensor_result.data_sensor;
+})
+
+watch(()=>filter.chart,async function(){
     data_anomali.data_sensor = [];
     await getAllMonitoring();
     let filter = mesin.value.filter((item)=>item._id === data_anomali.id_mesin_anomali)
@@ -115,8 +134,11 @@ onMounted(async()=>{
                             <div class="side w-10 h-full float-left rounded-lg" style="background-color: #00D1D1"></div>
                             <div class="flex flex-col items-center px-7 py-7 justify-center h-full">
                                 <span class="desc text-lg font-bold text-main_black">Kesehatan Mesin</span>
-                                <div class="w-full h-7 mt-2 border rounded-lg bar-cont">
-                                    <div class="bar w-3/4 h-full rounded-lg"></div>
+                                <div class="w-full mt-2 bar-cont">
+                                    <!-- <div class="bar w-3/4 h-full rounded-lg"></div> -->
+                                    <div class="w-full bg-gray-100 h-7 rounded-lg dark:bg-gray-700">
+                                        <div class="text-base pt-1 h-7 font-bold text-main_black text-center p-0.5 leading-none rounded-lg" :class="[avg_kesehatan >= 70 ? 'bg-green-200' : '', avg_kesehatan < 70 && avg_kesehatan > 40 ? 'bg-yellow-200' : '',avg_kesehatan < 40 ? 'bg-red-200' : '']" :style="'width:'+avg_kesehatan+'%'"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -163,7 +185,7 @@ onMounted(async()=>{
                     </div>
                 </div>
                 <div class="kesehatan">
-                    <div class="bg-light b-shadow py-6 px-7 rounded-2xl">
+                    <div class="bg-light b-shadow py-6 px-7 rounded-2xl" style="height: 380px">
                             <h3 class="text-center font-bold text-xl relative">
                                 Kesehatan Mesin
                                 <span class="absolute right-0 text-sm mt-2 italic underline hover:cursor-pointer" @click="$router.push({name: 'Monitoring'})">Lihat lainnya ></span>
@@ -188,15 +210,16 @@ onMounted(async()=>{
                                 </select>
                             </h3>
                             <div>
-                                <select class="cursor-pointer focus:outline-none text-xl">
-                                    <option>Percepatan</option>
-                                    <option>Kecepatan</option>
-                                    <option>Temperatur</option>
+                                <select v-model="filter.chart" class="cursor-pointer focus:outline-none text-xl">
+                                    <option value="all">Semua</option>
+                                    <option value="percepatan">Percepatan</option>
+                                    <option value="kecepatan">Kecepatan</option>
+                                    <option value="suhu">Temperatur</option>
                                 </select>
                             </div>
                         </div>
                         <div v-if="data_anomali.data_sensor.length > 0">
-                            <line-chart :data_sensor="data_anomali.data_sensor"></line-chart>
+                            <line-chart :data_sensor="data_anomali.data_sensor" :filter="filter.chart"></line-chart>
                         </div>
                     </div>
                 </div>

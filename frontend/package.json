@@ -8,6 +8,9 @@
         "preview": "vite preview",
         "test": "jest"
     },
+    "jest": {
+        "collectCoverage": true
+    },
     "dependencies": {
         "apexcharts": "^3.33.2",
         "axios": "^0.26.0",

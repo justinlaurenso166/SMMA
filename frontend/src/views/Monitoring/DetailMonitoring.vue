@@ -8,7 +8,7 @@ import Datepicker from 'vue3-date-time-picker';
 import 'vue3-date-time-picker/dist/main.css'
 import axios from "axios"
 import { reactive, ref } from "@vue/reactivity"
-import { onMounted } from "@vue/runtime-core";
+import { onMounted, watch } from "@vue/runtime-core";
 import { useRoute, useRouter } from "vue-router";
 import { createToast } from "mosha-vue-toastify";
 import "mosha-vue-toastify/dist/style.css";
@@ -41,6 +41,9 @@ const data_anomali = reactive({
 const data_ai = ref([]);
 const latest_data_ai = ref([]);
 const pembaharuan_mesin = ref([]);
+const filter = reactive({
+    chart: "all",
+})
 
 async function getMonitoringById(){
     try {
@@ -171,7 +174,7 @@ function statusMesin(kondisi){
         status = "Mesin mengalami anomali"
     }
     else{
-        status = "Mesin telah rusak"
+        status = "Mesin telah gagal atau rusak"
     }
 
     return status
@@ -207,6 +210,12 @@ function checkStatus(kondisi){
     return status
 }
 
+watch(()=>filter.chart,async function(){
+    data_anomali.data_sensor = [];
+    await getMonitoringById();
+})
+
+
 
 onMounted(async()=>{
     await getMonitoringById();
@@ -219,6 +228,9 @@ onMounted(async()=>{
 <style scoped>
     .b-shadow{
         box-shadow: 3px 5px 6px rgba(0, 0, 0, 0.25);
+    }
+    input[type=text]:disabled{
+        background-color: #cacaca;
     }
 </style>
 
@@ -323,7 +335,7 @@ onMounted(async()=>{
                                     </div>
                                     <div class="sensor text-lg mt-2">
                                         <h3 class="font-bold">Kode Sensor</h3>
-                                        <input type="text" class="mt-1 border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full" v-model="detail_mesin.kode_sensor">
+                                        <input type="text" class="mt-1 border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full" v-model="detail_mesin.kode_sensor" disabled>
                                     </div>
                                     <div class="w-44 m-auto mt-9">
                                         <button class="bg-main_blue text-light text-lg py-2 px-4 rounded-md w-full">Save Changes</button>
@@ -399,10 +411,11 @@ onMounted(async()=>{
                     <div class="bg-light b-shadow py-6 px-7 rounded-2xl">
                         <div class="flex justify-between text-lg">
                             <div>
-                                    <select class="cursor-pointer focus:outline-none ml-6">
-                                        <option>Percepatan</option>
-                                        <option>Kecepatan</option>
-                                        <option>Temperatur</option>
+                                    <select v-model="filter.chart" class="cursor-pointer focus:outline-none ml-6">
+                                        <option value="all">Semua</option>
+                                        <option value="percepatan">Percepatan</option>
+                                        <option value="kecepatan">Kecepatan</option>
+                                        <option value="suhu">Temperatur</option>
                                     </select>
                                     <select class="cursor-pointer focus:outline-none text-xl ml-8">
                                         <option>Harian</option>
@@ -415,7 +428,7 @@ onMounted(async()=>{
                             </div>
                         </div>
                         <div class="mt-5" v-if="data_anomali.data_sensor.length > 0">
-                            <line-chart :data_sensor="data_anomali.data_sensor"></line-chart>
+                            <line-chart :data_sensor="data_anomali.data_sensor" :filter="filter.chart"></line-chart>
                         </div>
                     </div>
                 </div>

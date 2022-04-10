@@ -46,6 +46,9 @@ onMounted(async()=>{
     .b-shadow{
         box-shadow: 3px 5px 6px rgba(0, 0, 0, 0.25);
     }
+    input[type=text]:disabled{
+        background-color: #cacaca;
+    }
 </style>
 
 <template>

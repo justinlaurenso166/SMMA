@@ -3,9 +3,10 @@ import { ref } from "@vue/reactivity";
 import { onMounted } from "@vue/runtime-core";
 import VueApexChart from "vue3-apexcharts"
 
-const props = defineProps(["data_sensor"]);
+const props = defineProps(["data_sensor","filter"]);
 
-console.log(props.data_sensor)
+// console.log(props.data_sensor)
+console.log(props.filter)
 const data_percepatan = ref([]);
 const data_kecepatan = ref([]);
 const data_suhu = ref([]);
@@ -43,7 +44,6 @@ const chartOptions = {
   },
   stroke: {
     curve: "smooth",
-    colors: ["#004f9b","#3751FF","#fb7448"],
     width: 2,
   },
   fill:{
@@ -51,8 +51,10 @@ const chartOptions = {
   }
 };
 
-const series = [
-  {
+let series;
+
+if(props.filter === "all"){
+  series = [{
     type: "area",
     name: "Percepatan",
     data: data_percepatan.value,
@@ -66,8 +68,28 @@ const series = [
     type: "area",
     name: "Suhu",
     data: data_suhu.value,
-  },
-];
+  }]
+}else if(props.filter === "percepatan"){
+  series = [{
+    type: "area",
+    name: "Percepatan",
+    data: data_percepatan.value,
+  }]
+}
+else if(props.filter === "kecepatan"){
+  series = [{
+    type: "area",
+    name: "kecepatan",
+    data: data_kecepatan.value,
+  }]
+}
+else if(props.filter === "suhu"){
+  series = [{
+    type: "area",
+    name: "suhu",
+    data: data_suhu.value,
+  }]
+}
 
 onMounted(()=>{
     data_percepatan.value = [];

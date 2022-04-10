@@ -22,11 +22,11 @@ async function checkMesinAnomali(){
     }
 }
 
-setInterval(async () => {
-  if(store.state.user_data !== null){
-    await checkMesinAnomali();
-  }
-}, 5000);
+// setInterval(async () => {
+//   if(store.state.user_data !== null){
+//     await checkMesinAnomali();
+//   }
+// }, 5000);
 
 watch(()=>store.state.user_data,async function(){
   if(store.state.user_data !== null){

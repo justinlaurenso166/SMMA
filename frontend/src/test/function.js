@@ -1,28 +1,67 @@
 const axios = require("axios")
 const URL = "http://localhost:4000"
+const ObjectId = require("bson-objectid")
 let data;
 
-async function login() {
-    // const headers = {
-    //     'Content-Type': 'text/plain'
-    // };
-    // // let data = {
-    // //     username: "admin",
-    // //     password: "admin",
-    // // }
-    try {
-        await axios.post(`${URL}/user/login`, data).then((res) => {
-            if (res.status === 200) {
-                return true;
+const functions = {
+    getJenisMesin: async function() {
+        try {
+            let res = await axios.get(URL + '/jenis_mesin/all')
+            console.log(res)
+            return res;
+        } catch (error) {
+            if (error.response) {
+                return error.response.data;
             }
-        })
-    } catch (error) {
-        if (error.response) {
-            return false;
         }
-    }
+    },
+    addJenisMesin: async function(kode_jenis_mesin) {
+        let jenis_mesin_baru = {
+                kode_jenis_mesin: kode_jenis_mesin,
+                jenis_mesin: "Motor Kecil",
+                spesifikasi: "Lorem ipsum lorem ipsum Lorem ipsum lorem",
+                kerusakan: [{
+                    _id: new ObjectId().toString(),
+                    nama: "Patah baling"
+                }],
+            }
+            // console.log(jenis_mesin_baru)
+        try {
+            let res = await axios.post(`/api/jenis_mesin/tambah`, jenis_mesin_baru)
+                // console.log(res)
+            return res
+        } catch (error) {
+            if (error.response) {
+                // console.log(error.response.data)
+                return error.response.data;
+            }
+        }
+    },
+    deleteJenisMesin: async function(id_jenis_mesin) {
+        try {
+            let res = await axios.delete(URL + `/jenis_mesin/delete/${id_jenis_mesin}`)
+            console.log(res)
+            return res;
+        } catch (error) {
+            if (error.response) {
+                return error.response.data;
+            }
+        }
+    },
+    login: async function(username, password) {
+        let data = {
+            username: username,
+            password: password
+        }
+        try {
+            let res = await axios.post(URL + "/user/login", data);
+            // console.log(res)
+            return res;
+        } catch (error) {
+            if (error.response) {
+                return error.response.data;
+            }
+        }
+    },
 }
-
-console.log(login)
-
-// module.exports = { login }
+module.exports = functions

@@ -61,7 +61,14 @@ async function addMonitoring(){
             }
         })
     } catch (error) {
-        console.log(error)
+        if(error.response){
+            createToast(error.response.data,{
+                toastBackgroundColor: "red",
+                showCloseButton: true,
+                timeout: 3000,
+                transition: "zoom",
+            });
+        }
     }
 }
 
