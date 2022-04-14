@@ -45,7 +45,9 @@ import store from "../store"
         <section class="h-screen bg-main_blue py-8 sidebar w-full max-h-screen overflow-y-auto relative">
             <section>
                 <div class="user-photo">
-                    <div class="bg-light w-44 h-44 rounded-full m-auto"></div>
+                    <div class="bg-light w-44 h-44 rounded-full m-auto flex items-center justify-center">
+                        
+                    </div>
                 </div>
                 <div class="username">
                     <h1 class="text-center text-light capitalize text-3xl mt-7 font-bold">{{$store.state.user_data.username}}</h1>

@@ -28,7 +28,7 @@ async function login() {
     await axios.post("/api/user/login", user_data).then((response) => {
       if (response.status === 200) {
         store.commit("MUTATE_USER_DATA", response.data);
-        console.log(response.data)
+        // console.log(response.data)
         router.push("/dashboard");
       }
     })

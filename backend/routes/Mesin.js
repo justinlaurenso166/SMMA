@@ -114,66 +114,77 @@ router.delete("/delete/:id/:kode_mesin/:kode_sensor", async(req, res) => {
 })
 
 router.post('/add', async(req, res) => {
-    const find_jenis_mesin = await JenisMesin.findById(req.body.id_jenis_mesin)
-    let data = {
-        _id: mongoose.Types.ObjectId(),
-        id_jenis_mesin: req.body.id_jenis_mesin,
-        jenis_mesin: find_jenis_mesin.jenis_mesin,
-        kode_mesin: req.body.kode_mesin,
-        kode_sensor: req.body.kode_sensor,
-        lokasi_mesin: req.body.lokasi_mesin,
-        timestamps: req.body.timestamps,
-        nama_mesin: req.body.nama_mesin,
-    }
-    const add_data = new Mesin(data);
-    const save_data = await add_data.save();
-    if (save_data) {
-        let data_sensors = {
-            _id: mongoose.Types.ObjectId(),
-            id_sensor: data.kode_sensor,
-            data_sensor: [{
+    const check_kode_mesin = await Mesin.find({ kode_mesin: req.body.kode_mesin });
+    if (check_kode_mesin.length > 0) {
+        res.status(500).send("Kode mesin sudah tersedia")
+    } else {
+        const check_kode_sensor = await Sensors.find({ id_sensor: req.body.kode_sensor });
+        if (check_kode_sensor.length > 0) {
+            res.status(500).send("Kode sensor sudah tersedia")
+        } else {
+            const find_jenis_mesin = await JenisMesin.findById(req.body.id_jenis_mesin)
+            let data = {
                 _id: mongoose.Types.ObjectId(),
-                percepatan: 0,
-                kecepatan: 0,
-                suhu: 0,
-                timestamps: new Date(),
-            }],
-            latest_data_sensor: [{
-                _id: mongoose.Types.ObjectId(),
-                percepatan: 0,
-                kecepatan: 0,
-                suhu: 0,
-                timestamps: new Date(),
-            }]
-        }
-        const add_sensor = new Sensors(data_sensors);
-        const save_sensor = await add_sensor.save();
-        if (save_sensor) {
-            let data_ai_results = {
-                _id: mongoose.Types.ObjectId(),
-                kode_sensor: data.kode_sensor,
-                kode_mesin: data.kode_mesin,
-                data_ai: [{
-                    _id: mongoose.Types.ObjectId(),
-                    kondisi_kesehatan: 100,
-                    estimasi_kerusakan: "",
-                    indikasi_kerusakan: "-",
-                    created_at: new Date(),
-                }],
-                latest_data_ai: [{
-                    _id: mongoose.Types.ObjectId(),
-                    kondisi_kesehatan: 100,
-                    estimasi_kerusakan: "",
-                    indikasi_kerusakan: "-",
-                    created_at: new Date(),
-                }]
+                id_jenis_mesin: req.body.id_jenis_mesin,
+                jenis_mesin: find_jenis_mesin.jenis_mesin,
+                kode_mesin: req.body.kode_mesin,
+                kode_sensor: req.body.kode_sensor,
+                lokasi_mesin: req.body.lokasi_mesin,
+                timestamps: req.body.timestamps,
+                nama_mesin: req.body.nama_mesin,
             }
-            const add_ai = new HasilAi(data_ai_results);
-            const save_ai = await add_ai.save();
-            if (save_ai) {
-                res.status(200)
-                res.send("Data Mesin berhasil ditambah")
+            const add_data = new Mesin(data);
+            const save_data = await add_data.save();
+            if (save_data) {
+                let data_sensors = {
+                    _id: mongoose.Types.ObjectId(),
+                    id_sensor: data.kode_sensor,
+                    data_sensor: [{
+                        _id: mongoose.Types.ObjectId(),
+                        percepatan: 0,
+                        kecepatan: 0,
+                        suhu: 0,
+                        timestamps: new Date(),
+                    }],
+                    latest_data_sensor: [{
+                        _id: mongoose.Types.ObjectId(),
+                        percepatan: 0,
+                        kecepatan: 0,
+                        suhu: 0,
+                        timestamps: new Date(),
+                    }]
+                }
+                const add_sensor = new Sensors(data_sensors);
+                const save_sensor = await add_sensor.save();
+                if (save_sensor) {
+                    let data_ai_results = {
+                        _id: mongoose.Types.ObjectId(),
+                        kode_sensor: data.kode_sensor,
+                        kode_mesin: data.kode_mesin,
+                        data_ai: [{
+                            _id: mongoose.Types.ObjectId(),
+                            kondisi_kesehatan: 100,
+                            estimasi_kerusakan: "",
+                            indikasi_kerusakan: "-",
+                            created_at: new Date(),
+                        }],
+                        latest_data_ai: [{
+                            _id: mongoose.Types.ObjectId(),
+                            kondisi_kesehatan: 100,
+                            estimasi_kerusakan: "",
+                            indikasi_kerusakan: "-",
+                            created_at: new Date(),
+                        }]
+                    }
+                    const add_ai = new HasilAi(data_ai_results);
+                    const save_ai = await add_ai.save();
+                    if (save_ai) {
+                        res.status(200)
+                        res.send("Data Mesin berhasil ditambah")
+                    }
+                }
             }
+
         }
     }
 })

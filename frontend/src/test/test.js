@@ -61,6 +61,13 @@ describe("Test Jenis Mesin", () => {
         axios.delete.mockImplementation(() => Promise.resolve(mock_data))
         expect(await functions.deleteJenisMesin("6235d5889352aa8702ae0505")).toEqual(mock_data)
     })
+
+    it("Edit Jenis Mesin", async() => {
+        let mock_data = "Berhasil mengubah data jenis mesin";
+
+        axios.put.mockImplementation(() => Promise.resolve(mock_data))
+        expect(await functions.editJenisMesin("6235d5889352aa8702ae0505")).toEqual(mock_data)
+    })
 })
 
 

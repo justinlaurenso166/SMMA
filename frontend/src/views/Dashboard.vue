@@ -8,7 +8,9 @@ import { reactive, ref } from "@vue/reactivity"
 import { onMounted, watch } from "@vue/runtime-core"
 
 const jenis_mesin = ref([]);
+const jenis_mesin_count = ref(0);
 const mesin = ref([]);
+const mesin_count = ref(0)
 const user = ref([]);
 const mesin_anomali = ref([]);
 const data_anomali = reactive({
@@ -25,8 +27,20 @@ const avg_kesehatan = ref(0)
 async function getJenisMesin(){
     try {
         await axios.get('/api/jenis_mesin/all').then((response)=>{
-            console.log(response.data)
-            jenis_mesin.value = response.data;
+            // console.log(response.data)
+            jenis_mesin_count.value = response.data.length;
+            if(response.data.length < 6){
+                jenis_mesin.value = []
+                jenis_mesin.value = response.data
+            }else {
+                jenis_mesin.value = []
+                for(let i = 0; i <= 5; i++){
+                    console.log(response.data[i])
+                    jenis_mesin.value.push(response.data[i])
+                    console.log(jenis_mesin.value)
+                }
+            }
+
         })
     } catch (error) {
         console.log(error)
@@ -36,17 +50,25 @@ async function getJenisMesin(){
 async function getAllMonitoring(){
     try {
         await axios.get("/api/mesin/all").then((response)=>{
-            mesin.value = response.data
+            mesin_count.value = response.data.length;
+            if(response.data.length < 6){
+                mesin.value = []
+                mesin.value = response.data;
+            }
+            else{
+                mesin.value = []
+                for(let i = 0; i <= 5; i++){
+                    mesin.value.push(response.data[i])
+                }
+            }
+
             mesin_anomali.value = mesin.value.filter((item)=>item.sensor_ai.latest_data_ai[0].kondisi_kesehatan === 50)
             
             let sum = 0;
             mesin.value.forEach((e)=>{
                 sum = sum += e.sensor_ai.latest_data_ai[0].kondisi_kesehatan;
             })
-            console.log(sum)
             avg_kesehatan.value = sum / mesin.value.length;
-            console.log(avg_kesehatan)
-            // console.log(response.data)
         })
     } catch (error) {
         console.log(error)
@@ -76,7 +98,6 @@ watch(()=>filter.chart,async function(){
     let filter = mesin.value.filter((item)=>item._id === data_anomali.id_mesin_anomali)
     data_anomali.data_sensor = filter[0].sensor_result.data_sensor;
 })
-
 
 
 onMounted(async()=>{
@@ -119,14 +140,14 @@ onMounted(async()=>{
                         <div class="bg-light rounded-2xl b-shadow">
                             <div class="side w-10 h-full float-left rounded-lg" style="background-color: #61FF00"></div>
                             <div class="flex items-center px-7 justify-center">
-                                <span class="number text-main_black" style="font-size: 70px">{{jenis_mesin.length > 0 ? jenis_mesin.length : 0}}</span>
+                                <span class="number text-main_black" style="font-size: 70px">{{jenis_mesin_count}}</span>
                                 <div class="desc px-7 text-lg font-bold text-main_black">Jenis Mesin</div>
                             </div>
                         </div>
                         <div class="bg-light rounded-2xl b-shadow">
                             <div class="side w-10 h-full float-left rounded-lg" style="background-color: #EBFF00"></div>
                             <div class="flex items-center px-7 justify-center">
-                                <span class="number text-main_black" style="font-size: 70px">{{mesin.length > 0 ? mesin.length : 0}}</span>
+                                <span class="number text-main_black" style="font-size: 70px">{{mesin_count}}</span>
                                 <div class="desc px-7 text-lg font-bold text-main_black">Monitoring Mesin</div>
                             </div>
                         </div>
@@ -164,7 +185,6 @@ onMounted(async()=>{
                                         <span>{{idx+1}}. </span>
                                         <span>{{daftar_mesin.jenis_mesin}}</span>
                                     </p>
-                                    <!-- <p>3</p> -->
                                 </div>
                             </div>
                         </div>

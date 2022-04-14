@@ -1,7 +1,6 @@
 const axios = require("axios")
 const URL = "http://localhost:4000"
 const ObjectId = require("bson-objectid")
-let data;
 
 const functions = {
     getJenisMesin: async function() {
@@ -29,6 +28,28 @@ const functions = {
         try {
             let res = await axios.post(`/api/jenis_mesin/tambah`, jenis_mesin_baru)
                 // console.log(res)
+            return res
+        } catch (error) {
+            if (error.response) {
+                // console.log(error.response.data)
+                return error.response.data;
+            }
+        }
+    },
+    editJenisMesin: async function(kode_jenis_mesin) {
+        let update_mesin = {
+                kode_jenis_mesin: kode_jenis_mesin,
+                jenis_mesin: "Motor Sedang",
+                spesifikasi: "Lorem ipsum lorem ipsum Lorem ipsum lorem",
+                kerusakan: [{
+                    _id: new ObjectId().toString(),
+                    nama: "Patah baling"
+                }],
+            }
+            // console.log(jenis_mesin_baru)
+        try {
+            let res = await axios.put(URL + `/jenis_mesin/edit/${kode_jenis_mesin}`, update_mesin)
+            console.log(res)
             return res
         } catch (error) {
             if (error.response) {
