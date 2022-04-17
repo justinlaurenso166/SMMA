@@ -105,7 +105,7 @@ onMounted(async()=>{
                     <div class="pb-6 pt-2 mt-4 grid 2xl:grid-cols-2 gap-10 md:grid-cols-1">
                     <div class="bg-light b-shadow rounded-xl hover:cursor-pointer" @click="$router.push({name: 'DetailMonitoring',params:{_id:mesin._id}})" v-for="mesin in all_mesin" :key="mesin._id">
                             <div class="flex justify-between px-10 py-5 text-lg shadow-lg" :class="[mesin.sensor_ai.latest_data_ai[0].kondisi_kesehatan === 100 ? 'bg-green-100' : '', mesin.sensor_ai.latest_data_ai[0].kondisi_kesehatan === 50 ? 'bg-yellow-100' : '',mesin.sensor_ai.latest_data_ai[0].kondisi_kesehatan === 0 ? 'bg-red-100' : '']">
-                                <p>{{mesin.nama_mesin}}</p>
+                                <p>{{mesin.nama_mesin}} | {{mesin.kode_mesin}}</p>
                                 <p>{{mesin.jenis_mesin}}</p>
                             </div>
                             <div class="flex items-center">

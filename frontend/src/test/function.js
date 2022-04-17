@@ -14,20 +14,17 @@ const functions = {
             }
         }
     },
-    addJenisMesin: async function(kode_jenis_mesin) {
+    addJenisMesin: async function(data) {
         let jenis_mesin_baru = {
-                kode_jenis_mesin: kode_jenis_mesin,
-                jenis_mesin: "Motor Kecil",
-                spesifikasi: "Lorem ipsum lorem ipsum Lorem ipsum lorem",
-                kerusakan: [{
-                    _id: new ObjectId().toString(),
-                    nama: "Patah baling"
-                }],
+                kode_jenis_mesin: data.kode_jenis_mesin,
+                jenis_mesin: data.jenis_mesin,
+                spesifikasi: data.spesifikasi,
+                kerusakan: data.kerusakan,
             }
             // console.log(jenis_mesin_baru)
         try {
-            let res = await axios.post(`/api/jenis_mesin/tambah`, jenis_mesin_baru)
-                // console.log(res)
+            let res = await axios.post(URL + `/jenis_mesin/tambah`, jenis_mesin_baru)
+            console.log(res)
             return res
         } catch (error) {
             if (error.response) {
@@ -39,8 +36,8 @@ const functions = {
     editJenisMesin: async function(kode_jenis_mesin) {
         let update_mesin = {
                 kode_jenis_mesin: kode_jenis_mesin,
-                jenis_mesin: "Motor Sedang",
-                spesifikasi: "Lorem ipsum lorem ipsum Lorem ipsum lorem",
+                jenis_mesin: "Motor Besar",
+                spesifikasi: "Mesin berkapasitas besar untuk kebutuhan yang besar",
                 kerusakan: [{
                     _id: new ObjectId().toString(),
                     nama: "Patah baling"
@@ -69,14 +66,10 @@ const functions = {
             }
         }
     },
-    login: async function(username, password) {
-        let data = {
-            username: username,
-            password: password
-        }
+    getListUser: async function() {
         try {
-            let res = await axios.post(URL + "/user/login", data);
-            // console.log(res)
+            let res = await axios.get(URL + '/user/all')
+            console.log(res)
             return res;
         } catch (error) {
             if (error.response) {
@@ -84,5 +77,29 @@ const functions = {
             }
         }
     },
+    search: async function(type, search_input) {
+            try {
+                let res = axios.post(URL + `/${type}/search?search=${search_input}`);
+                console.log(res)
+                return res;
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        // login: async function(username, password) {
+        //     let data = {
+        //         username: username,
+        //         password: password
+        //     }
+        //     try {
+        //         let res = await axios.post(URL + "/user/login", data);
+        //         // console.log(res)
+        //         return res;
+        //     } catch (error) {
+        //         if (error.response) {
+        //             return error.response.data;
+        //         }
+        //     }
+        // },
 }
 module.exports = functions

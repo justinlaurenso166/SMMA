@@ -248,7 +248,7 @@ onMounted(async()=>{
                         <h1 class="font-medium text-gray-200 text-2xl mt-1.5">
                             <span class="cursor-pointer" @click="$router.push({name:'Monitoring'})">Monitoring</span> / <span class="cursor-pointer" @click="$router.push({name:'DetailMonitoring'})">Detail Monitoring</span>
                         </h1>
-                        <div>
+                        <div v-if="$store.state.user_data.hak_akses === 1">
                             <button class="text-xl bg-main_blue text-light py-2 px-5 rounded-lg" @click="showDeleteBox = true">Hapus</button>
                         </div>
                     </div>

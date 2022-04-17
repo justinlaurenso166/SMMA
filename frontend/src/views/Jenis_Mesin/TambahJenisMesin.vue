@@ -101,16 +101,16 @@ function addKerusakan(){
                             <div class="info mt-3">
                                 <form @submit.prevent="addJenisMesin()">
                                     <div class="kode text-lg">
-                                        <h3 class="font-bold">Kode</h3>
-                                        <input required type="text" class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl bg-gray-100 mt-1" :class="alert.error ? 'border-red-200' : 'border-main_blue'" placeholder="Kode Jenis Mesin..." v-model="jenis_mesin_baru.kode_jenis_mesin">
+                                        <h3 class="font-bold text-gray-200 uppercase tracking-wide">Kode</h3>
+                                        <input required type="text" class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" :class="alert.error ? 'border-red-200' : 'border-main_blue'" placeholder="Kode Jenis Mesin..." v-model="jenis_mesin_baru.kode_jenis_mesin">
                                     </div>
-                                    <div class="nama text-lg mt-2">
-                                        <h3 class="font-bold">Nama</h3>
-                                        <input required type="text" class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl border-main_blue bg-gray-100 mt-1" placeholder="Nama Jenis Mesin..." v-model="jenis_mesin_baru.jenis_mesin">
+                                    <div class="nama text-lg mt-4">
+                                        <h3 class="font-bold text-gray-200 uppercase tracking-wide">Nama</h3>
+                                        <input required type="text" class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" placeholder="Nama Jenis Mesin..." v-model="jenis_mesin_baru.jenis_mesin">
                                     </div>
-                                    <div class="desc text-lg mt-2">
-                                        <h3 class="font-bold">Deskripsi</h3>
-                                        <textarea class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl border-main_blue bg-gray-100 mt-1" rows="10" placeholder="Deskripsi..." v-model="jenis_mesin_baru.spesifikasi"></textarea>
+                                    <div class="desc text-lg mt-4">
+                                        <h3 class="font-bold text-gray-200 uppercase tracking-wide">Deskripsi</h3>
+                                        <textarea class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" rows="7" placeholder="Deskripsi..." v-model="jenis_mesin_baru.spesifikasi"></textarea>
                                     </div>
 
                                     <div class="save_changes w-52 m-auto mt-5">
@@ -124,7 +124,7 @@ function addKerusakan(){
                             <div class="form mt-7">
                                 <div class="add_kerusakan">
                                     <div class="flex gap-7">
-                                        <input type="text" placeholder="Tambah Kerusakan..." class="border border-main_blue rounded-xl px-4 py-1.5 w-full focus:outline-none" v-model="new_kerusakan">
+                                        <input type="text" placeholder="Tambah Kerusakan..." class="w-full bg-gray-50 focus:outline-none py-3 px-3" v-model="new_kerusakan">
                                     <div class="text-4xl bg-main_blue text-light px-4 py-1 rounded-md" @click="addKerusakan()"> + </div>
                                     </div>
                                 </div>

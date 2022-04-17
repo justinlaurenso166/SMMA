@@ -50,7 +50,8 @@ import store from "../store"
                     </div>
                 </div>
                 <div class="username">
-                    <h1 class="text-center text-light capitalize text-3xl mt-7 font-bold">{{$store.state.user_data.username}}</h1>
+                    <h1 class="text-center text-light capitalize text-3xl mt-7 font-bold">{{$store.state.user_data.hak_akses === 1 ? 'Administrator' : 'User'}}</h1>
+                    <h1 class="text-center text-light text-xl mt-3 font-medium">{{$store.state.user_data.username}}</h1>
                 </div>
             </section>
             <hr class="mb-6 mt-8 text-main_yellow">

@@ -5,12 +5,21 @@ import VueApexChart from "vue3-apexcharts";
 const props = defineProps(["health","labels","indikasi"]);
 
 const color = ref("");
+const bg = ref("");
+const health = ref(0)
+console.log(props.health)
 if(props.health === 100){
     color.value = "#61FF00";
+    bg.value = "#dfefff"
+    health.value = props.health
 }else if(props.health === 50){
     color.value = "#FFF000";
+    bg.value = "#dfefff"
+    health.value = props.health
 }else if(props.health === 0){
     color.value = "#FF0000"
+    health.value = 20
+    bg.value = "#dfefff"
 }
 
 var chartOptions = {
@@ -18,14 +27,14 @@ var chartOptions = {
     type: "radialBar",
   },
   colors: [color.value],
-  series: [props.health],
+  series: [health.value],
   labels: [props.labels],
   plotOptions: {
     radialBar: {
       startAngle: -90,
       endAngle: 90,
       track: {
-        background: "#dfefff",
+        background: bg.value,
         startAngle: -90,
         endAngle: 90,
       },
@@ -42,15 +51,6 @@ var chartOptions = {
           show: false,
         },
       },
-    },
-  },
-  fill: {
-    type: "gradient",
-    gradient: {
-      shade: "dark",
-      type: "horizontal",
-      // gradientToColors: ["#F25F33","#FFF000", "#61FF00"],
-      stops: [0, 100],
     },
   },
   responsive: [{

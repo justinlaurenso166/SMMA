@@ -138,21 +138,21 @@ onMounted(async()=>{
                 <div class="detail">
                     <div class="grid 2xl:grid-cols-4 lg:grid-cols-2 gap-7 grid-cols-1">
                         <div class="bg-light rounded-2xl b-shadow">
-                            <div class="side w-10 h-full float-left rounded-lg" style="background-color: #61FF00"></div>
+                            <div class="side w-10 h-full float-left rounded-lg" style="background-color: #004f9b"></div>
                             <div class="flex items-center px-7 justify-center">
                                 <span class="number text-main_black" style="font-size: 70px">{{jenis_mesin_count}}</span>
                                 <div class="desc px-7 text-lg font-bold text-main_black">Jenis Mesin</div>
                             </div>
                         </div>
                         <div class="bg-light rounded-2xl b-shadow">
-                            <div class="side w-10 h-full float-left rounded-lg" style="background-color: #EBFF00"></div>
+                            <div class="side w-10 h-full float-left rounded-lg" style="background-color: #004f9b"></div>
                             <div class="flex items-center px-7 justify-center">
                                 <span class="number text-main_black" style="font-size: 70px">{{mesin_count}}</span>
                                 <div class="desc px-7 text-lg font-bold text-main_black">Monitoring Mesin</div>
                             </div>
                         </div>
                         <div class="bg-light rounded-2xl b-shadow">
-                            <div class="side w-10 h-full float-left rounded-lg" style="background-color: #00D1D1"></div>
+                            <div class="side w-10 h-full float-left rounded-lg" style="background-color: #004f9b"></div>
                             <div class="flex flex-col items-center px-7 py-7 justify-center h-full">
                                 <span class="desc text-lg font-bold text-main_black">Kesehatan Mesin</span>
                                 <div class="w-full mt-2 bar-cont">
@@ -164,7 +164,7 @@ onMounted(async()=>{
                             </div>
                         </div>
                         <div class="bg-light rounded-2xl b-shadow">
-                            <div class="side w-10 h-full float-left rounded-lg" style="background-color: #FFD600"></div>
+                            <div class="side w-10 h-full float-left rounded-lg" style="background-color: #004f9b"></div>
                             <div class="flex items-center px-7 justify-center">
                                 <span class="number text-main_black" style="font-size: 70px">{{user.length > 0 ? user.length : 0}}</span>
                                 <div class="desc px-7 text-lg font-bold text-main_black">Pengguna</div>
@@ -197,7 +197,7 @@ onMounted(async()=>{
                                 <div v-for="(msn,i) in mesin" :key="i">
                                     <p>
                                         <span>{{i+1}}. </span>
-                                        <span>{{msn.nama_mesin}}</span>
+                                        <span>{{msn.nama_mesin}} | {{msn.kode_mesin}}</span>
                                     </p>
                                 </div>
                             </div>
@@ -205,15 +205,16 @@ onMounted(async()=>{
                     </div>
                 </div>
                 <div class="kesehatan">
-                    <div class="bg-light b-shadow py-6 px-7 rounded-2xl" style="height: 380px">
+                    <div class="bg-light b-shadow py-6 px-7 rounded-2xl" style="height: 400px">
                             <h3 class="text-center font-bold text-xl relative">
                                 Kesehatan Mesin
                                 <span class="absolute right-0 text-sm mt-2 italic underline hover:cursor-pointer" @click="$router.push({name: 'Monitoring'})">Lihat lainnya ></span>
                             </h3>
-                            <div class="list mt-9 text-lg grid 2xl:grid-cols-4 md:grid-cols-2 gap-8">
-                                <div v-for="(msn,i) in mesin" :key="i" class="relative">
+                            <div class="list mt-9 text-lg grid 2xl:grid-cols-4 md:grid-cols-1 gap-8">
+                                <div v-for="(msn,i) in mesin" :key="i" class="relative hover:cursor-pointer" @click="$router.push({name:'DetailMonitoring', params:{_id: msn._id}})">
                                     <radial :health="msn.sensor_ai.latest_data_ai[0].kondisi_kesehatan" :labels="msn.nama_mesin" :indikasi="msn.sensor_ai.latest_data_ai[0].indikasi_kerusakan"></radial>
-                                    <p class="text-center -mt-20">{{msn.sensor_ai.latest_data_ai[0].indikasi_kerusakan}}</p>
+                                    <p class="text-center -mt-20 font-bold">{{msn.sensor_ai.kode_mesin}}</p>
+                                    <p class="text-center mt-1">{{msn.sensor_ai.latest_data_ai[0].indikasi_kerusakan}}</p>
                                 </div>
                             </div>
                     </div>
@@ -225,7 +226,7 @@ onMounted(async()=>{
                             <h3 class="text-xl my-4">
                                 <select v-model="data_anomali.id_mesin_anomali">
                                     <option v-for="anomali in mesin_anomali" :key="anomali._id" :value="anomali._id" @click="changeGraphic(anomali._id)">
-                                        {{anomali.nama_mesin}}
+                                        {{anomali.nama_mesin}} - {{anomali.kode_mesin}}
                                     </option>
                                 </select>
                             </h3>

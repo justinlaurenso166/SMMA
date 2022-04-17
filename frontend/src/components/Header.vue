@@ -66,7 +66,7 @@ async function search(){
     <div>
         <header class="bg-light px-7 py-5 flex justify-between sticky top-0 z-50" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);">
                 <div class="relative">
-                    <input type="text" placeholder="Search For..." class="border border-main_blue px-3 py-1.5 rounded-md w-80 text-xl focus:outline-none" v-if="$route.name !== 'Dashboard'" v-model="search_input" @keyup="search()">
+                    <input type="text" placeholder="Search For..." class="border border-main_blue px-3 py-1.5 rounded-md w-80 text-xl focus:outline-none" v-if="($route.name !== 'Dashboard') && ($store.state.hak_akses !== 2 && $route.name !== 'UserSetting' )" v-model="search_input" @keyup="search()">
                     <div class="bg-light border rounded-md absolute z-50 w-80 max-h-56 overflow-y-auto" style="box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);" v-if="showResult && search_input !== '' && $route.path.includes('jenis_mesin')">
                         <div v-for="(res) in result" :key="res._id" class="py-3 px-3 text-lg hover:bg-main_blue hover:text-light hover:cursor-pointer" @click="$router.push({name: 'DetailJenisMesin', params:{_id: res._id}})">
                             {{res.jenis_mesin}} - {{res.kode_jenis_mesin}}
@@ -99,7 +99,7 @@ async function search(){
                             </div>
                         </div>
                     </div>
-                    <span class="capitalize mr-5 text-2xl font-medium">
+                    <span class="mr-5 text-2xl font-medium">
                         {{$store.state.user_data.username}}
                     </span>
                     <div class="border w-9 h-9 rounded-full"></div>

@@ -98,7 +98,7 @@ onMounted(async()=>{
                                     <h3 class="text-center font-bold text-lg mb-4">Daftar Mesin Monitoring</h3>
                                     <p v-for="(daftar, idx) in daftar_mesin" :key="daftar._id" class="mt-1">
                                         <span>{{idx+1}}. </span>
-                                        <span>{{daftar.nama_mesin}}</span>
+                                        <span>{{daftar.nama_mesin}} | {{daftar.kode_mesin}}</span>
                                     </p>
                                 </div>
                             </div>
