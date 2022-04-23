@@ -85,7 +85,7 @@ router.put('/edit/:id', async(req, res) => {
     }
     const update = await Mesin.updateOne({ _id: req.params.id }, { $set: data });
     res.status(200)
-    res.send("Berhasil mengubah data mesin")
+    res.send("Successfully changed machine data")
 })
 
 router.put('/remove/:id', async(req, res) => {
@@ -100,7 +100,7 @@ router.put('/remove/:id', async(req, res) => {
     }
     const update = await Mesin.updateOne({ _id: req.params.id }, { $set: data });
     res.status(200)
-    res.send("Berhasil menghapus jenis mesin dari data mesin")
+    res.send("Successfully deleted machine type from machine data")
 })
 
 router.delete("/delete/:id/:kode_mesin/:kode_sensor", async(req, res) => {
@@ -109,18 +109,18 @@ router.delete("/delete/:id/:kode_mesin/:kode_sensor", async(req, res) => {
     const delete_sensor = await Sensors.findOneAndDelete({ id_sensor: req.params.kode_sensor });
     if (delete_mesin && delete_ai && delete_sensor) {
         res.status(200)
-        res.send("Mesin Monitoring berhasil dihapus")
+        res.send("Monitoring Machine has been deleted successfully")
     }
 })
 
 router.post('/add', async(req, res) => {
     const check_kode_mesin = await Mesin.find({ kode_mesin: req.body.kode_mesin });
     if (check_kode_mesin.length > 0) {
-        res.status(500).send("Kode mesin sudah tersedia")
+        res.status(500).send("Machine code is available")
     } else {
         const check_kode_sensor = await Sensors.find({ id_sensor: req.body.kode_sensor });
         if (check_kode_sensor.length > 0) {
-            res.status(500).send("Kode sensor sudah tersedia")
+            res.status(500).send("Sensor code is available")
         } else {
             const find_jenis_mesin = await JenisMesin.findById(req.body.id_jenis_mesin)
             let data = {
@@ -180,7 +180,7 @@ router.post('/add', async(req, res) => {
                     const save_ai = await add_ai.save();
                     if (save_ai) {
                         res.status(200)
-                        res.send("Data Mesin berhasil ditambah")
+                        res.send("Machine data added successfully")
                     }
                 }
             }

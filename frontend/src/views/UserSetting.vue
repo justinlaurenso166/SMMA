@@ -84,7 +84,7 @@ const editProfile = async(type)=>{
     else{
         //check the current password if not same then error
         if(data_user.current_password !== store.state.user_data.password){
-            createToast("Password lama tidak sesuai",{
+            createToast("The old password doesn't match",{
                 toastBackgroundColor: "red",
                 showCloseButton: true,
                 timeout: 3000,
@@ -94,7 +94,7 @@ const editProfile = async(type)=>{
             //check new password and confirm password
             if(data_user.new_password !== data_user.confirm_password){
                 // console.log("aadf")
-                createToast("Password baru dan konfirmasi harus sama",{
+                createToast("New password and confirmation must be the same",{
                     toastBackgroundColor: "red",
                     showCloseButton: true,
                     timeout: 3000,
@@ -320,11 +320,11 @@ onMounted(async()=>{
             <modal v-if="showDeleteBox">
                     <template v-slot:body>
                         <div>
-                            <h3 class="text-2xl text-center font-bold">Apakah Anda yakin ingin menghapus pengguna ini ?</h3>
-                            <p class="text-center text-xl font-medium mt-5">Data akan terhapus selamanya</p>
+                            <h3 class="text-2xl text-center font-bold">Are you sure you want to delete this user?</h3>
+                            <p class="text-center text-xl font-medium mt-5">Data will be deleted forever</p>
                             <div class="flex gap-12 mt-10">
-                                <button class="flex-1 bg-red-200 text-light text-lg text-semibold py-2.5 rounded-lg" @click="showDeleteBox = false">Batal</button>
-                                <button class="flex-1 bg-main_blue text-light text-lg text-semibold py-2.5 rounded-lg" @click="deleteUser()">Ya, hapus</button>
+                                <button class="flex-1 bg-red-200 text-light text-lg text-semibold py-2.5 rounded-lg" @click="showDeleteBox = false">Cancel</button>
+                                <button class="flex-1 bg-main_blue text-light text-lg text-semibold py-2.5 rounded-lg" @click="deleteUser()">Yes, delete</button>
                             </div>
                         </div>
                     </template>

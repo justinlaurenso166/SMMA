@@ -168,13 +168,13 @@ function convertDate(date){
 function statusMesin(kondisi){
     let status;
     if(kondisi === 100){
-        status = "Mesin dalam keadaan normal"
+        status = "The machine is in normal condition"
     }
     else if(kondisi === 50){
-        status = "Mesin mengalami anomali"
+        status = "The machine has an anomaly"
     }
     else{
-        status = "Mesin telah gagal atau rusak"
+        status = "The machine has failed or is damaged"
     }
 
     return status
@@ -186,7 +186,7 @@ function checkIndikasi(kondisi){
         status = "Normal"
     }
     else if(kondisi === 50){
-        status = "Anomali"
+        status = "Anomaly"
     }
     else{
         status = "Failed"
@@ -198,10 +198,10 @@ function checkIndikasi(kondisi){
 function checkStatus(kondisi){
       let status;
     if(kondisi === 100){
-        status = "Sehat"
+        status = "Healthy"
     }
     else if(kondisi === 50){
-        status = "Anomali"
+        status = "Anomaly"
     }
     else{
         status = "Failed"
@@ -249,7 +249,7 @@ onMounted(async()=>{
                             <span class="cursor-pointer" @click="$router.push({name:'Monitoring'})">Monitoring</span> / <span class="cursor-pointer" @click="$router.push({name:'DetailMonitoring'})">Detail Monitoring</span>
                         </h1>
                         <div v-if="$store.state.user_data.hak_akses === 1">
-                            <button class="text-xl bg-main_blue text-light py-2 px-5 rounded-lg" @click="showDeleteBox = true">Hapus</button>
+                            <button class="text-xl bg-main_blue text-light py-2 px-5 rounded-lg" @click="showDeleteBox = true">Delete</button>
                         </div>
                     </div>
                 </div>
@@ -269,20 +269,20 @@ onMounted(async()=>{
                                 <div class="2xl:w-2/3 py-4 px-5 w-1/2">
                                     <div class="grid 2xl:grid-cols-3 gap-10 lg:grid-cols-1 lg:py-5">
                                         <div class="kecepatan">
-                                            <h3 class="uppercase font-semibold tracking-widest 2xl:text-3xl text-xl">Kecepatan</h3>
+                                            <h3 class="uppercase font-semibold tracking-widest 2xl:text-3xl text-xl">Velocity</h3>
                                             <p class="2xl:text-4xl text-2xl mt-2"><span class="font-extrabold 2xl:text-4xl lg:text-3xl">{{data_monitoring[0].sensor_result.latest_data_sensor[0].kecepatan}} </span> M/s</p>
                                         </div>
                                         <div class="percepatan">
-                                            <h3 class="uppercase font-semibold tracking-widest 2xl:text-3xl text-xl">Percepatan</h3>
+                                            <h3 class="uppercase font-semibold tracking-widest 2xl:text-3xl text-xl">Acceleration</h3>
                                             <p class="2xl:text-4xl text-2xl mt-2"><span class="font-extrabold 2xl:text-4xl lg:text-3xl">{{data_monitoring[0].sensor_result.latest_data_sensor[0].percepatan}} </span> M/s</p>
                                         </div>
                                         <div class="suhu">
-                                            <h3 class="uppercase font-semibold tracking-widest 2xl:text-3xl text-xl">Temperatur</h3>
+                                            <h3 class="uppercase font-semibold tracking-widest 2xl:text-3xl text-xl">Temperature</h3>
                                             <p class="2xl:text-4xl text-2xl mt-2"><span class="font-extrabold 2xl:text-4xl lg:text-3xl">{{data_monitoring[0].sensor_result.latest_data_sensor[0].suhu}} </span> °C</p>
                                         </div>
                                     </div>
                                     <div class="mt-3">
-                                        <h1 class="font-bold text-2xl">Indikasi Anomali Mesin</h1>
+                                        <h1 class="font-bold text-2xl">Machine Anomaly Indication</h1>
                                         <p class="text-xl mt-1">{{data_monitoring[0].sensor_ai.latest_data_ai[0].indikasi_kerusakan}}</p>
                                     </div>
                                 </div>
@@ -293,40 +293,42 @@ onMounted(async()=>{
                 <div>
                     <div class="flex 2xl:flex-row lg:flex-col gap-7" v-if="data_monitoring?.length > 0">
                         <div class="2xl:w-1/3 lg:w-full bg-light b-shadow py-7 px-8 rounded-xl">
-                            <div class="w-6 h-6 bg-main_blue float-right rounded hover:cursor-pointer" @click="editMesin = !editMesin" v-if="$store.state.user_data.hak_akses === 1"></div>
-                            <h3 class="text-center font-bold text-lg">Detail Mesin</h3>
+                            <div class="w-6 h-6 m-auto flex items-center justify-center bg-main_blue float-right rounded hover:cursor-pointer" @click="editMesin = !editMesin" v-if="$store.state.user_data.hak_akses === 1">
+                                <img src="../../assets/svg/Edit.svg" class="w-4">
+                            </div>
+                            <h3 class="text-center font-bold text-lg">Machine Detail</h3>
                             <div class="info mt-5" v-if="!editMesin">
                                 <div class="kode text-lg">
-                                    <h3 class="font-bold">Kode Mesin</h3>
+                                    <h3 class="font-bold">Machine Code</h3>
                                     <p class="">{{data_monitoring[0].kode_mesin}}</p>
                                 </div>
                                 <div class="nama text-lg mt-2">
-                                    <h3 class="font-bold">Nama</h3>
+                                    <h3 class="font-bold">Name</h3>
                                     <p class="">{{data_monitoring[0].nama_mesin}}</p>
                                 </div>
                                 <div class="jenis text-lg mt-2">
-                                    <h3 class="font-bold">Jenis Mesin</h3>
+                                    <h3 class="font-bold">Machine Type</h3>
                                     <p class="" v-if="data_monitoring[0].jenis_mesin !== ''">{{data_monitoring[0].jenis_mesin}}</p>
                                     <p class="" v-else>-</p>
                                 </div>
                                 <div class="sensor text-lg mt-2">
-                                    <h3 class="font-bold">Kode Sensor</h3>
+                                    <h3 class="font-bold">Sensor Code</h3>
                                     <p class="">{{data_monitoring[0].kode_sensor}}</p>
                                 </div>
                             </div>
                             <div class="info mt-5" v-else>
                                 <form @submit.prevent="editDetailMesin">
                                     <div class="kode text-lg">
-                                        <h3 class="font-bold">Kode Mesin</h3>
-                                        <input type="text" class="mt-1 border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full" v-model="detail_mesin.kode_mesin" disabled>
+                                        <h3 class="font-bold">Machine Code</h3>
+                                        <input type="text" class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" v-model="detail_mesin.kode_mesin" disabled>
                                     </div>
                                     <div class="nama text-lg mt-2">
-                                        <h3 class="font-bold">Nama</h3>
-                                        <input type="text" class="mt-1 border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full"  v-model="detail_mesin.nama_mesin">
+                                        <h3 class="font-bold">Name</h3>
+                                        <input type="text" class="mt-1 w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1"  v-model="detail_mesin.nama_mesin">
                                     </div>
                                     <div class="jenis text-lg mt-2">
-                                        <h3 class="font-bold">Jenis Mesin</h3>
-                                        <select class="border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full" v-model="detail_mesin.id_jenis_mesin">
+                                        <h3 class="font-bold">Machine Type</h3>
+                                        <select class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" v-model="detail_mesin.id_jenis_mesin">
                                             <option disabled value="">Pilih Jenis Mesin</option>
                                             <option v-for="jenis in all_jenis_mesin" :key="jenis._id" :value="jenis._id">
                                                 {{jenis.jenis_mesin}}
@@ -334,8 +336,8 @@ onMounted(async()=>{
                                         </select>
                                     </div>
                                     <div class="sensor text-lg mt-2">
-                                        <h3 class="font-bold">Kode Sensor</h3>
-                                        <input type="text" class="mt-1 border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full" v-model="detail_mesin.kode_sensor" disabled>
+                                        <h3 class="font-bold">Sensor Code</h3>
+                                        <input type="text" class="mt-1 w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" v-model="detail_mesin.kode_sensor" disabled>
                                     </div>
                                     <div class="w-44 m-auto mt-9">
                                         <button class="bg-main_blue text-light text-lg py-2 px-4 rounded-md w-full">Save Changes</button>
@@ -344,27 +346,29 @@ onMounted(async()=>{
                             </div>
                         </div>
                         <div class="2xl:w-2/3 lg:w-full bg-light b-shadow rounded-xl py-7 px-8" v-if="data_monitoring?.length > 0">
-                            <div class="w-6 h-6 bg-main_blue float-right rounded hover:cursor-pointer" @click="editPenjelasan = !editPenjelasan" v-if="$store.state.user_data.hak_akses === 1"></div>
-                            <h3 class="text-center font-bold text-lg">Penjelasan Mesin</h3>
+                            <div class="w-6 h-6 flex items-center justify-center bg-main_blue float-right rounded hover:cursor-pointer" @click="editPenjelasan = !editPenjelasan" v-if="$store.state.user_data.hak_akses === 1">
+                                <img src="../../assets/svg/Edit.svg" class="w-4">
+                            </div>
+                            <h3 class="text-center font-bold text-lg">Machine Explanation</h3>
                             <div class="penjelasan mt-7 text-lg" v-if="!editPenjelasan">
                                 <div class="deskripsi">
-                                    <h3 class="font-bold">Deskripsi</h3>
+                                    <h3 class="font-bold">Description</h3>
                                     <p class="text-justify mt-3">{{penjelasan_mesin.spesifikasi}}</p>
                                 </div>
                                 <div class="lokasi mt-5">
-                                    <h3 class="font-bold">Lokasi</h3>
+                                    <h3 class="font-bold">Location</h3>
                                     <p class="text-justify mt-3">{{detail_mesin.lokasi_mesin}}</p>
                                 </div>
                             </div>
                             <div class="penjelasan mt-7 text-lg" v-else>
                                 <form @submit.prevent="editDetailMesin()">
                                     <div class="deskripsi">
-                                        <h3 class="font-bold">Deskripsi</h3>
+                                        <h3 class="font-bold">Description</h3>
                                         <p class="text-justify mt-3">{{penjelasan_mesin.spesifikasi}}</p>
                                     </div>
                                     <div class="lokasi mt-3">
-                                        <h3 class="font-bold">Lokasi</h3>
-                                        <textarea class="border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full mt-2" rows="3"  v-model="detail_mesin.lokasi_mesin"></textarea>
+                                        <h3 class="font-bold">Location</h3>
+                                        <textarea class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1 mt-2" rows="3"  v-model="detail_mesin.lokasi_mesin"></textarea>
                                     </div>
                                     <div class="w-44 m-auto mt-7">
                                         <button class="bg-main_blue text-light text-lg py-2 px-4 rounded-md w-full">Save Changes</button>
@@ -376,16 +380,16 @@ onMounted(async()=>{
                 </div>
                 <div>
                     <div class="table bg-light b-shadow w-full px-8 py-6 mt-6 rounded-xl">
-                        <h3 class="text-center font-bold text-lg">Pembaharuan Kondisi Mesin</h3>
+                        <h3 class="text-center font-bold text-lg">Machine Condition Update</h3>
                         <table class="table-auto w-full border-collapse border border-main_blue mt-4">
                             <tr class="text-lg">
                                 <th class="border border-main_blue py-2">No.</th>
-                                <th class="border border-main_blue py-2">Waktu</th>
-                                <th class="border border-main_blue py-2">Penjelasan</th>
+                                <th class="border border-main_blue py-2">Time</th>
+                                <th class="border border-main_blue py-2">Explanation</th>
                                 <th class="border border-main_blue py-2">Temp<br><span class="text-sm">(°C)</span></th>
                                 <th class="border border-main_blue py-2">V<br><span class="text-sm">(m/s)</span></th>
                                 <th class="border border-main_blue py-2">A<br><span class="text-sm">(m/s)</span></th>
-                                <th class="border border-main_blue py-2">Indikasi</th>
+                                <th class="border border-main_blue py-2">Indication</th>
                                 <th class="border border-main_blue py-2">Status</th>
                             </tr>
                             <tr v-for="(info,i) in pembaharuan_mesin" :key="i">
@@ -412,15 +416,15 @@ onMounted(async()=>{
                         <div class="flex justify-between text-lg">
                             <div>
                                     <select v-model="filter.chart" class="cursor-pointer focus:outline-none ml-6">
-                                        <option value="all">Semua</option>
-                                        <option value="percepatan">Percepatan</option>
-                                        <option value="kecepatan">Kecepatan</option>
-                                        <option value="suhu">Temperatur</option>
+                                        <option value="all">All</option>
+                                        <option value="percepatan">Acceleration</option>
+                                        <option value="kecepatan">Velocity</option>
+                                        <option value="suhu">Temperature</option>
                                     </select>
                                     <select class="cursor-pointer focus:outline-none text-xl ml-8">
-                                        <option>Harian</option>
-                                        <option>Mingguan</option>
-                                        <option>Bulanan</option>
+                                        <option>Daily</option>
+                                        <option>Weekly</option>
+                                        <option>Monthly</option>
                                     </select>
                                 </div>
                             <div>
@@ -434,15 +438,15 @@ onMounted(async()=>{
                 </div>
                 <modal v-if="showDeleteBox">
                     <template v-slot:header>
-                        <h1 class="text-center text-2xl font-bold text-main_blue">Konfimasi Penghapusan</h1>
+                        <h1 class="text-center text-2xl font-bold text-main_blue">Delete Confirmation</h1>
                     </template>
                     <template v-slot:body>
                         <div class="mt-8">
-                            <h3 class="text-xl text-center font-semibold">Apakah Anda yakin ingin menghapus monitoring mesin ini ?</h3>
-                            <p class="text-center text-lg font-medium mt-2">Data akan terhapus selamanya</p>
+                            <h3 class="text-xl text-center font-semibold">Are you sure you want to remove this machine monitoring?</h3>
+                            <p class="text-center text-lg font-medium mt-2">Data will be deleted forever</p>
                             <div class="flex gap-12 mt-10">
-                                <button class="flex-1 bg-red-200 text-light text-lg text-semibold py-2.5 rounded-lg" @click="showDeleteBox = false">Batal</button>
-                                <button class="flex-1 bg-main_blue text-light text-lg text-semibold py-2.5 rounded-lg" @click="deleteMonitoring()">Ya, hapus data ini</button>
+                                <button class="flex-1 bg-red-200 text-light text-lg text-semibold py-2.5 rounded-lg" @click="showDeleteBox = false">Cancel</button>
+                                <button class="flex-1 bg-main_blue text-light text-lg text-semibold py-2.5 rounded-lg" @click="deleteMonitoring()">Yes, delete this data</button>
                             </div>
                         </div>
                     </template>

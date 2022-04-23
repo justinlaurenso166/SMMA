@@ -60,42 +60,56 @@ onMounted(async()=>{
             <Header />
             <section class="p-10 flex flex-col gap-9">
                 <div class="heading">
-                    <h1 class="font-bold text-gray-200 text-4xl">Jenis Mesin</h1>
+                    <h1 class="font-bold text-gray-200 text-4xl">Machine Types</h1>
                     <h1 class="font-medium text-gray-200 text-2xl mt-1.5">
-                        <span class="cursor-pointer" @click="$router.push({name:'JenisMesin'})">Jenis Mesin</span> / <span class="cursor-pointer" @click="$router.push({name:'DetailMesin'})">Detail Jenis Mesin</span>
+                        <span class="cursor-pointer" @click="$router.push({name:'JenisMesin'})">Machine Types</span> / <span class="cursor-pointer" @click="$router.push({name:'DetailMesin'})">Machine Type Detail</span>
                     </h1>
                 </div>
 
                 <div>
                     <div class="flex justify-end" v-if="$store.state.user_data.hak_akses === 1">
                         <button class="text-light bg-main_blue text-xl px-6 py-3 rounded-xl" @click="$router.push({name:'EditJenisMesin',params:{_id: $route.params._id}})">
-                            Ubah <img src="../../assets/svg/Edit.svg" class="inline w-7 -mt-1 ml-1">
+                            Edit <img src="../../assets/svg/Edit.svg" class="inline w-7 -mt-1 ml-1">
                         </button>
                     </div>
                     <div class="mt-7 flex gap-7 2xl:flex-row lg:flex-col">
                         <div class="2xl:w-1/3 lg:w-full">
                             <div class=" bg-light b-shadow py-7 px-8 rounded-xl">
-                                <h3 class="text-center font-bold text-lg">Informasi Umum</h3>
+                                <h3 class="text-center font-bold text-lg text-gray-200">General Information</h3>
                                 <div class="info mt-3">
                                     <div class="kode text-lg">
-                                        <h3 class="font-bold">Kode</h3>
+                                        <h3 class="font-bold">Code</h3>
                                         <p class="">{{jenis_mesin.kode_jenis_mesin}}</p>
                                     </div>
                                     <div class="nama text-lg mt-2">
-                                        <h3 class="font-bold">Nama</h3>
+                                        <h3 class="font-bold">Name</h3>
                                         <p class="">{{jenis_mesin.jenis_mesin}}</p>
                                     </div>
                                     <div class="desc text-lg mt-2">
-                                        <h3 class="font-bold">Deskripsi</h3>
+                                        <h3 class="font-bold">Description</h3>
                                         <p class="text-justify w-full break-words">
                                             {{jenis_mesin.spesifikasi}}
                                         </p>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="2xL:w-2/3 lg:w-full ">
+                            <div class="bg-light b-shadow rounded-xl py-7 px-8 self-start">
+                                <h3 class="text-center font-bold text-lg text-gray-200">Damage List</h3>
+                                <div class="form mt-7">
+                                    <div class="list mt-5 text-lg">
+                                        <h3 class="font-bold">Machine Damage</h3>
+                                        <p v-for="(kerusakan, idx) in jenis_mesin.kerusakan" :key="kerusakan._id">
+                                            <span>{{idx+1}}. </span>
+                                            <span>{{kerusakan.nama}}</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="bg-light b-shadow w-full px-8 py-6 mt-8 rounded-xl">
                                 <div class="list_mesin">
-                                    <h3 class="text-center font-bold text-lg mb-4">Daftar Mesin Monitoring</h3>
+                                    <h3 class="text-center font-bold text-lg mb-4">Monitoring Machine List</h3>
                                     <p v-for="(daftar, idx) in daftar_mesin" :key="daftar._id" class="mt-1">
                                         <span>{{idx+1}}. </span>
                                         <span>{{daftar.nama_mesin}} | {{daftar.kode_mesin}}</span>
@@ -103,19 +117,6 @@ onMounted(async()=>{
                                 </div>
                             </div>
                         </div>
-                        <div class="2xL:w-2/3 lg:w-full bg-light b-shadow rounded-xl py-7 px-8 self-start">
-                            <h3 class="text-center font-bold text-lg">Daftar Kerusakan</h3>
-                            <div class="form mt-7">
-                                <div class="list mt-5 text-lg">
-                                    <h3 class="font-bold">Kerusakan Mesin</h3>
-                                    <p v-for="(kerusakan, idx) in jenis_mesin.kerusakan" :key="kerusakan._id">
-                                        <span>{{idx+1}}. </span>
-                                        <span>{{kerusakan.nama}}</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        
                     </div>
                 </div>
             </section>

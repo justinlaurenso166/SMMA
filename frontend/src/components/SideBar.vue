@@ -11,7 +11,7 @@ import store from "../store"
             link: "/dashboard"
         },
         {
-            name: "Jenis Mesin",
+            name: "Machine Types",
             icon_white: "/src/assets/img/jenis_white.png",
             icon_yellow: "/src/assets/img/jenis_yellow.png",
             link: "/jenis_mesin"

@@ -143,9 +143,9 @@ onMounted(async()=>{
             <Header />
             <section class="p-10 flex flex-col gap-9">
                 <div class="heading">
-                    <h1 class="font-bold text-gray-200 text-4xl">Jenis Mesin</h1>
+                    <h1 class="font-bold text-gray-200 text-4xl">Machine Types</h1>
                     <h1 class="font-medium text-gray-200 text-2xl mt-1.5">
-                        <span class="cursor-pointer" @click="$router.push({name:'JenisMesin'})">Jenis Mesin</span> / <span class="cursor-pointer" @click="$router.push({name:'EditJenisMesin'})">Ubah Jenis Mesin</span>
+                        <span class="cursor-pointer" @click="$router.push({name:'JenisMesin'})">Machine Types</span> / <span class="cursor-pointer" @click="$router.push({name:'EditJenisMesin'})">Edit Machine Type</span>
                     </h1>
                 </div>
 
@@ -156,20 +156,20 @@ onMounted(async()=>{
                     <div class="flex gap-7 mt-6">
                         <div class="w-1/3 ">
                         <div class="bg-light b-shadow py-7 px-8 rounded-xl">
-                            <h3 class="text-center font-bold text-lg">Informasi Umum</h3>
+                            <h3 class="text-center font-bold text-lg">General Information</h3>
                             <div class="info mt-3">
                                 <form>
                                     <div class="kode text-lg">
-                                        <h3 class="font-bold">Kode</h3>
-                                        <input type="text" class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl border-main_blue bg-gray-100 mt-1 hover:cursor-not-allowed" v-model="jenis_mesin.kode_jenis_mesin" disabled>
+                                        <h3 class="font-bold">Code</h3>
+                                        <input type="text" class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1 hover:cursor-not-allowed" v-model="jenis_mesin.kode_jenis_mesin" disabled>
                                     </div>
                                     <div class="nama text-lg mt-2">
-                                        <h3 class="font-bold">Nama</h3>
-                                        <input type="text"  class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl border-main_blue bg-gray-100 mt-1" v-model="jenis_mesin.jenis_mesin">
+                                        <h3 class="font-bold">Name</h3>
+                                        <input type="text"  class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" v-model="jenis_mesin.jenis_mesin">
                                     </div>
                                     <div class="desc text-lg mt-2">
-                                        <h3 class="font-bold">Deskripsi</h3>
-                                        <textarea class="w-full px-4 py-1 border-2 focus:outline-none rounded-xl border-main_blue bg-gray-100 mt-1" rows="10" v-model="jenis_mesin.spesifikasi"></textarea>
+                                        <h3 class="font-bold">Description</h3>
+                                        <textarea class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" rows="10" v-model="jenis_mesin.spesifikasi"></textarea>
                                     </div>
                                     <!-- <div class="save_changes w-52 m-auto mt-5">
                                         <button class="bg-main_blue text-light text-lg px-3 p-3 w-full rounded-xl">Save Changes</button>
@@ -177,9 +177,32 @@ onMounted(async()=>{
                                 </form>
                             </div>
                         </div>
-                        <div class="bg-light b-shadow w-full px-8 py-6 mt-8 rounded-xl">
+                        </div>
+                        <div class="w-2/3 ">
+                            <div class="bg-light b-shadow rounded-xl py-7 px-8 self-start">
+                                <h3 class="text-center font-bold text-lg">Damage List</h3>
+                                <div class="form mt-7">
+                                    <div class="add_kerusakan">
+                                        <div class="flex gap-7">
+                                            <input type="text" placeholder="Add Damage..." class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" v-model="new_kerusakan">
+                                        <div class="text-4xl bg-main_blue text-light px-4 py-1 rounded-md" @click="addKerusakan"> + </div>
+                                        </div>
+                                    </div>
+                                    <div class="list mt-5 text-lg">
+                                        <h3 class="font-bold">Machine Damage</h3>
+                                        <p v-for="(kerusakan, idx) in jenis_mesin.kerusakan" :key="kerusakan._id" class="mt-2">
+                                            <span class="border mr-3 hover:cursor-pointer" @click="kerusakan_id = kerusakan._id; showDeleteKerusakanBox = true;">
+                                                <img src="../../assets/svg/Cross.svg" class="inline -mt-1">
+                                            </span>
+                                            <span>{{idx+1}}. </span>
+                                            <span>{{kerusakan.nama}}</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-light b-shadow w-full px-8 py-6 mt-8 rounded-xl">
                                 <div class="list_mesin">
-                                    <h3 class="text-center font-bold text-lg mb-4">Daftar Mesin Monitoring</h3>
+                                    <h3 class="text-center font-bold text-lg mb-4">Monitoring Machine List</h3>
                                     <p v-for="(daftar, idx) in daftar_mesin" :key="daftar._id" class="mt-2">
                                         <span class="border mr-3 hover:cursor-pointer" @click="remove_mesin_id = daftar._id; showDeleteMesinBox = true">
                                             <img src="../../assets/svg/Cross.svg" class="inline -mt-1">
@@ -190,55 +213,34 @@ onMounted(async()=>{
                                 </div>
                             </div>
                         </div>
-                        <div class="w-2/3 bg-light b-shadow rounded-xl py-7 px-8 self-start">
-                            <h3 class="text-center font-bold text-lg">Daftar Kerusakan</h3>
-                            <div class="form mt-7">
-                                <div class="add_kerusakan">
-                                    <div class="flex gap-7">
-                                        <input type="text" placeholder="Tambah Kerusakan..." class="border border-main_blue rounded-xl px-4 py-1.5 w-full focus:outline-none" v-model="new_kerusakan">
-                                    <div class="text-4xl bg-main_blue text-light px-4 py-1 rounded-md" @click="addKerusakan"> + </div>
-                                    </div>
-                                </div>
-                                <div class="list mt-5 text-lg">
-                                    <h3 class="font-bold">Kerusakan Mesin</h3>
-                                    <p v-for="(kerusakan, idx) in jenis_mesin.kerusakan" :key="kerusakan._id" class="mt-2">
-                                        <span class="border mr-3 hover:cursor-pointer" @click="kerusakan_id = kerusakan._id; showDeleteKerusakanBox = true;">
-                                            <img src="../../assets/svg/Cross.svg" class="inline -mt-1">
-                                        </span>
-                                        <span>{{idx+1}}. </span>
-                                        <span>{{kerusakan.nama}}</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <modal v-if="showDeleteKerusakanBox">
                     <template v-slot:header>
-                        <h1 class="text-center text-2xl font-bold text-main_blue">Konfimasi Penghapusan</h1>
+                        <h1 class="text-center text-2xl font-bold text-main_blue">Delete Confirmation</h1>
                     </template>
                     <template v-slot:body>
                         <div class="mt-8">
-                            <h3 class="text-xl text-center font-semibold">Apakah Anda yakin ingin menghapus kerusakan mesin ini ?</h3>
-                            <p class="text-center text-lg font-medium mt-2">Data akan terhapus selamanya</p>
+                            <h3 class="text-xl text-center font-semibold">Are you sure you want to delete this Machine Damage?</h3>
+                            <p class="text-center text-lg font-medium mt-2">Data will be deleted forever</p>
                             <div class="flex gap-12 mt-10">
-                                <button class="flex-1 bg-red-200 text-light text-lg text-semibold py-2.5 rounded-lg" @click="showDeleteKerusakanBox = false">Batal</button>
-                                <button class="flex-1 bg-main_blue text-light text-lg text-semibold py-2.5 rounded-lg" @click="removeKerusakan()">Ya, hapus data ini</button>
+                                <button class="flex-1 bg-red-200 text-light text-lg text-semibold py-2.5 rounded-lg" @click="showDeleteKerusakanBox = false">Cancel</button>
+                                <button class="flex-1 bg-main_blue text-light text-lg text-semibold py-2.5 rounded-lg" @click="removeKerusakan()">Yes, delete this data</button>
                             </div>
                         </div>
                     </template>
                 </modal>
                 <modal v-if="showDeleteMesinBox">
                     <template v-slot:header>
-                        <h1 class="text-center text-2xl font-bold text-main_blue">Konfimasi Penghapusan</h1>
+                        <h1 class="text-center text-2xl font-bold text-main_blue">Delete Confirmation</h1>
                     </template>
                     <template v-slot:body>
                         <div class="mt-8">
-                            <h3 class="text-xl text-center font-semibold">Apakah Anda yakin ingin menghapus monitoring mesin dari jenis mesin ini ?</h3>
-                            <p class="text-center text-lg font-medium mt-2">Data akan terhapus selamanya</p>
+                            <h3 class="text-xl text-center font-semibold">Are you sure you want to remove machine monitoring from this machine type?</h3>
+                            <p class="text-center text-lg font-medium mt-2">Data will be deleted forever</p>
                             <div class="flex gap-12 mt-10">
-                                <button class="flex-1 bg-red-200 text-light text-lg text-semibold py-2.5 rounded-lg" @click="showDeleteMesinBox = false">Batal</button>
-                                <button class="flex-1 bg-main_blue text-light text-lg text-semibold py-2.5 rounded-lg" @click="removeMesin()">Ya, hapus data ini</button>
+                                <button class="flex-1 bg-red-200 text-light text-lg text-semibold py-2.5 rounded-lg" @click="showDeleteMesinBox = false">Cancel</button>
+                                <button class="flex-1 bg-main_blue text-light text-lg text-semibold py-2.5 rounded-lg" @click="removeMesin()">Yes, delete this data</button>
                             </div>
                         </div>
                     </template>

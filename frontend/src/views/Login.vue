@@ -98,7 +98,7 @@ async function login() {
                   name="username"
                   placeholder="Username"
                   v-model="user_data.username"
-                  class="p-2 focus:outline-none border rounded-2xl border-main_blue text-xl w-full"
+                  class="p-2 focus:outline-none border rounded-2xl border-main_blue text-xl w-full text-main_blue"
                   required
                 />
               </div>
@@ -114,7 +114,7 @@ async function login() {
                   name="password"
                   placeholder="********"
                   v-model="user_data.password"
-                  class="mb-5 p-2 focus:outline-none border rounded-2xl border-main_blue text-xl w-full"
+                  class="mb-5 p-2 focus:outline-none border rounded-2xl border-main_blue text-xl w-full text-main_blue"
                   required
                 />
                 <img :src="showPassword ? unlock : lock" class="cursor-pointer inline absolute w-10 -ml-12 mt-1" @click="showPassword = !showPassword">

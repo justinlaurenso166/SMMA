@@ -100,7 +100,7 @@ onMounted(async()=>{
 
                 <div>
                     <div class="flex justify-end" v-if="$store.state.user_data.hak_akses === 1">
-                        <button class="text-light bg-main_blue text-xl px-6 py-3 rounded-xl" @click="addMesinBaru = true">Tambah +</button>
+                        <button class="text-light bg-main_blue text-xl px-6 py-3 rounded-xl" @click="addMesinBaru = true">Add +</button>
                     </div>
                     <div class="pb-6 pt-2 mt-4 grid 2xl:grid-cols-2 gap-10 md:grid-cols-1">
                     <div class="bg-light b-shadow rounded-xl hover:cursor-pointer" @click="$router.push({name: 'DetailMonitoring',params:{_id:mesin._id}})" v-for="mesin in all_mesin" :key="mesin._id">
@@ -114,15 +114,15 @@ onMounted(async()=>{
                                 </div>
                                 <div class="w-1/2 py-4 px-10">
                                     <div class="kecepatan">
-                                        <h3 class="uppercase font-bold tracking-widest text-xl">Kecepatan</h3>
+                                        <h3 class="uppercase font-bold tracking-widest text-xl">Velocity</h3>
                                         <p class="text-2xl"><span class="font-bold text-4xl">{{mesin.sensor_result.latest_data_sensor[0].kecepatan}} </span> M/s</p>
                                     </div>
                                     <div class="percepatan mt-5">
-                                        <h3 class="uppercase font-bold tracking-widest text-xl">Percepatan</h3>
+                                        <h3 class="uppercase font-bold tracking-widest text-xl">Acceleration</h3>
                                         <p class="text-2xl"><span class="font-bold text-4xl">{{mesin.sensor_result.latest_data_sensor[0].percepatan}} </span> M/s</p>
                                     </div>
                                     <div class="suhu mt-5">
-                                        <h3 class="uppercase font-bold tracking-widest text-xl">Temperatur</h3>
+                                        <h3 class="uppercase font-bold tracking-widest text-xl">Temperature</h3>
                                         <p class="text-2xl"><span class="font-bold text-4xl">{{mesin.sensor_result.latest_data_sensor[0].suhu}} </span> °C</p>
                                     </div>
                                 </div>
@@ -133,27 +133,27 @@ onMounted(async()=>{
             </section>
             <modal v-if="addMesinBaru">
                 <template v-slot:header>
-                    <h3 class="text-xl font-bold text-center">Tambah Mesin</h3>
+                    <h3 class="text-xl font-bold text-center">Add Machine</h3>
                 </template>
                 <template v-slot:body>
                     <form @submit.prevent="addMonitoring">
                         <div class="flex text-lg items-center mt-5">
-                            <div class="flex-0 w-1/3 font-bold">Kode Mesin</div>
+                            <div class="flex-0 w-1/3 font-bold">Machine Code</div>
                             <div class="flex-1">
-                                <input required type="text" class="border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full" v-model="new_mesin.kode_mesin">
+                                <input required type="text" class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" v-model="new_mesin.kode_mesin" placeholder="Ex: MSN-001">
                             </div>
                         </div>
                         <div class="flex text-lg items-center mt-2">
-                            <div class="flex-0 w-1/3 font-bold">Nama Mesin</div>
+                            <div class="flex-0 w-1/3 font-bold">Machine Name</div>
                             <div class="flex-1">
-                                <input required type="text" class="border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full" v-model="new_mesin.nama_mesin">
+                                <input required type="text" class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" v-model="new_mesin.nama_mesin" placeholder="Ex: Mesin Bubut">
                             </div>
                         </div>
                         <div class="flex text-lg items-center mt-2">
-                            <div class="flex-0 w-1/3 font-bold">Jenis Mesin</div>
+                            <div class="flex-0 w-1/3 font-bold">Machine Type</div>
                             <div class="flex-1">
-                                <select required class="border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full" v-model="new_mesin.id_jenis_mesin">
-                                    <option disabled value="">Pilih Jenis Mesin</option>
+                                <select required class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" v-model="new_mesin.id_jenis_mesin">
+                                    <option disabled value="">Choose Machine Type</option>
                                     <option v-for="jenis in all_jenis_mesin" :key="jenis._id" :value="jenis._id">
                                         {{jenis.jenis_mesin}}
                                     </option>
@@ -161,15 +161,15 @@ onMounted(async()=>{
                             </div>
                         </div>
                         <div class="flex text-lg items-center mt-2">
-                            <div class="flex-0 w-1/3 font-bold">Kode Sensor</div>
+                            <div class="flex-0 w-1/3 font-bold">Sensor Code</div>
                             <div class="flex-1">
-                                <input required type="text" class="border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full" v-model="new_mesin.kode_sensor">
+                                <input required type="text" class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" v-model="new_mesin.kode_sensor" placeholder="Ex: SNSR-001">
                             </div>
                         </div>
                         <div class="flex text-lg items-center mt-2">
-                            <div class="flex-0 w-1/3 font-bold">Lokasi</div>
+                            <div class="flex-0 w-1/3 font-bold">Location</div>
                             <div class="flex-1">
-                                <textarea required class="border-2 border-main_blue bg-gray-100 rounded-lg px-3 py-1 w-full" rows="4" v-model="new_mesin.lokasi_mesin"></textarea>
+                                <textarea required class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" rows="4" v-model="new_mesin.lokasi_mesin" placeholder="Ex: Lantai 1"></textarea>
                             </div>
                         </div>
                         <div class="flex gap-8 w-72 m-auto mt-10">

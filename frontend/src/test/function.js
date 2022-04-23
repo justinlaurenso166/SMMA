@@ -33,11 +33,11 @@ const functions = {
             }
         }
     },
-    editJenisMesin: async function(kode_jenis_mesin) {
+    editJenisMesin: async function(data) {
         let update_mesin = {
-                kode_jenis_mesin: kode_jenis_mesin,
-                jenis_mesin: "Motor Besar",
-                spesifikasi: "Mesin berkapasitas besar untuk kebutuhan yang besar",
+                kode_jenis_mesin: data.kode_jenis_mesin_baru,
+                jenis_mesin: data.jenis_mesin,
+                spesifikasi: data.spesifikasi,
                 kerusakan: [{
                     _id: new ObjectId().toString(),
                     nama: "Patah baling"
@@ -45,7 +45,7 @@ const functions = {
             }
             // console.log(jenis_mesin_baru)
         try {
-            let res = await axios.put(URL + `/jenis_mesin/edit/${kode_jenis_mesin}`, update_mesin)
+            let res = await axios.put(URL + `/jenis_mesin/edit/${data.kode_jenis_mesin}`, update_mesin)
             console.log(res)
             return res
         } catch (error) {

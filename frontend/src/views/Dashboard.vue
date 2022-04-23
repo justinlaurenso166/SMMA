@@ -62,7 +62,7 @@ async function getAllMonitoring(){
                 }
             }
 
-            mesin_anomali.value = mesin.value.filter((item)=>item.sensor_ai.latest_data_ai[0].kondisi_kesehatan === 50)
+            mesin_anomali.value = mesin.value.filter((item)=>item.sensor_ai.latest_data_ai[0].kondisi_kesehatan <= 50)
             
             let sum = 0;
             mesin.value.forEach((e)=>{
@@ -141,20 +141,20 @@ onMounted(async()=>{
                             <div class="side w-10 h-full float-left rounded-lg" style="background-color: #004f9b"></div>
                             <div class="flex items-center px-7 justify-center">
                                 <span class="number text-main_black" style="font-size: 70px">{{jenis_mesin_count}}</span>
-                                <div class="desc px-7 text-lg font-bold text-main_black">Jenis Mesin</div>
+                                <div class="desc px-7 text-lg font-bold text-main_black">Machine Types</div>
                             </div>
                         </div>
                         <div class="bg-light rounded-2xl b-shadow">
                             <div class="side w-10 h-full float-left rounded-lg" style="background-color: #004f9b"></div>
                             <div class="flex items-center px-7 justify-center">
                                 <span class="number text-main_black" style="font-size: 70px">{{mesin_count}}</span>
-                                <div class="desc px-7 text-lg font-bold text-main_black">Monitoring Mesin</div>
+                                <div class="desc px-7 text-lg font-bold text-main_black">Machine Monitoring</div>
                             </div>
                         </div>
                         <div class="bg-light rounded-2xl b-shadow">
                             <div class="side w-10 h-full float-left rounded-lg" style="background-color: #004f9b"></div>
                             <div class="flex flex-col items-center px-7 py-7 justify-center h-full">
-                                <span class="desc text-lg font-bold text-main_black">Kesehatan Mesin</span>
+                                <span class="desc text-lg font-bold text-main_black">Machine Health</span>
                                 <div class="w-full mt-2 bar-cont">
                                     <!-- <div class="bar w-3/4 h-full rounded-lg"></div> -->
                                     <div class="w-full bg-gray-100 h-7 rounded-lg dark:bg-gray-700">
@@ -167,7 +167,7 @@ onMounted(async()=>{
                             <div class="side w-10 h-full float-left rounded-lg" style="background-color: #004f9b"></div>
                             <div class="flex items-center px-7 justify-center">
                                 <span class="number text-main_black" style="font-size: 70px">{{user.length > 0 ? user.length : 0}}</span>
-                                <div class="desc px-7 text-lg font-bold text-main_black">Pengguna</div>
+                                <div class="desc px-7 text-lg font-bold text-main_black">Users</div>
                             </div>
                         </div>
                     </div>
@@ -176,8 +176,8 @@ onMounted(async()=>{
                     <div class="grid 2xl:grid-cols-2 gap-7">
                         <div class="bg-light b-shadow py-6 px-7 rounded-2xl">
                             <h3 class="font-bold text-xl text-center relative">
-                                Jenis Mesin
-                                <span class="absolute right-0 text-sm mt-2 italic underline hover:cursor-pointer" @click="$router.push({name: 'JenisMesin'})">Lihat lainnya ></span>
+                                Machine Types
+                                <span class="absolute right-0 text-sm mt-2 italic underline hover:cursor-pointer" @click="$router.push({name: 'JenisMesin'})">See More ></span>
                             </h3>
                             <div class="list mt-4 text-lg">
                                 <div class="flex justify-between" v-for="(daftar_mesin, idx) in jenis_mesin" :key="idx">
@@ -191,7 +191,7 @@ onMounted(async()=>{
                         <div class="bg-light b-shadow py-6 px-7 rounded-2xl">
                             <h3 class="font-bold text-xl text-center relative">
                                 Monitoring
-                                <span class="absolute right-0 text-sm mt-2 italic underline hover:cursor-pointer" @click="$router.push({name: 'Monitoring'})">Lihat lainnya ></span>
+                                <span class="absolute right-0 text-sm mt-2 italic underline hover:cursor-pointer" @click="$router.push({name: 'Monitoring'})">See More ></span>
                             </h3>
                             <div class="list mt-4 text-lg">
                                 <div v-for="(msn,i) in mesin" :key="i">
@@ -207,11 +207,11 @@ onMounted(async()=>{
                 <div class="kesehatan">
                     <div class="bg-light b-shadow py-6 px-7 rounded-2xl" style="height: 400px">
                             <h3 class="text-center font-bold text-xl relative">
-                                Kesehatan Mesin
-                                <span class="absolute right-0 text-sm mt-2 italic underline hover:cursor-pointer" @click="$router.push({name: 'Monitoring'})">Lihat lainnya ></span>
+                                Machine Health
+                                <span class="absolute right-0 text-sm mt-2 italic underline hover:cursor-pointer" @click="$router.push({name: 'Monitoring'})">See More ></span>
                             </h3>
                             <div class="list mt-9 text-lg grid 2xl:grid-cols-4 md:grid-cols-1 gap-8">
-                                <div v-for="(msn,i) in mesin" :key="i" class="relative hover:cursor-pointer" @click="$router.push({name:'DetailMonitoring', params:{_id: msn._id}})">
+                                <div v-for="(msn,i) in mesin_anomali" :key="i" class="relative hover:cursor-pointer" @click="$router.push({name:'DetailMonitoring', params:{_id: msn._id}})">
                                     <radial :health="msn.sensor_ai.latest_data_ai[0].kondisi_kesehatan" :labels="msn.nama_mesin" :indikasi="msn.sensor_ai.latest_data_ai[0].indikasi_kerusakan"></radial>
                                     <p class="text-center -mt-20 font-bold">{{msn.sensor_ai.kode_mesin}}</p>
                                     <p class="text-center mt-1">{{msn.sensor_ai.latest_data_ai[0].indikasi_kerusakan}}</p>
@@ -221,7 +221,7 @@ onMounted(async()=>{
                 </div>
                 <div class="chart" v-if="mesin_anomali.length > 0">
                     <div class="bg-light b-shadow py-6 px-7 rounded-2xl">
-                        <h3 class="text-left font-bold text-xl">Mesin membutuhkan Perhatian</h3>
+                        <h3 class="text-left font-bold text-xl">Machine needs Attention</h3>
                         <div class="flex justify-between">
                             <h3 class="text-xl my-4">
                                 <select v-model="data_anomali.id_mesin_anomali">
@@ -232,10 +232,10 @@ onMounted(async()=>{
                             </h3>
                             <div>
                                 <select v-model="filter.chart" class="cursor-pointer focus:outline-none text-xl">
-                                    <option value="all">Semua</option>
-                                    <option value="percepatan">Percepatan</option>
-                                    <option value="kecepatan">Kecepatan</option>
-                                    <option value="suhu">Temperatur</option>
+                                    <option value="all">All</option>
+                                    <option value="percepatan">Acceleration</option>
+                                    <option value="kecepatan">Velocity</option>
+                                    <option value="suhu">Temperature</option>
                                 </select>
                             </div>
                         </div>

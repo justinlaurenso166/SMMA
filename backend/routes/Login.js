@@ -27,7 +27,7 @@ router.post('/adduser', async(req, res) => {
     const save_add_user = await add_user.save();
     if (save_add_user) {
         res.status(200)
-        res.send("Pengguna baru berhasil ditambahkan")
+        res.send("New user added successfully")
     }
 })
 
@@ -60,7 +60,7 @@ router.put('/edit/:id', async(req, res) => {
         const edit_user = await Login.updateOne({ _id: req.params.id }, { $set: data })
         if (edit_user) {
             res.status(200)
-            res.send("Data Pengguna berhasil diedit")
+            res.send("User Data edited successfully")
         }
     } else {
         let data = {
@@ -69,7 +69,7 @@ router.put('/edit/:id', async(req, res) => {
         const edit_user = await Login.updateOne({ _id: req.params.id }, { $set: data })
         if (edit_user) {
             res.status(200)
-            res.send("Password berhasil diganti")
+            res.send("Password successfully changed")
         }
     }
 })
@@ -78,7 +78,7 @@ router.delete("/delete/:id", async(req, res) => {
     const delete_user = await Login.findByIdAndDelete(req.params.id)
     if (delete_user) {
         res.status(200)
-        res.send("Data penguna berhasil dihapus")
+        res.send("User data deleted successfully")
     }
 })
 

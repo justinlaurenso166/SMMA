@@ -19,7 +19,7 @@ router.get('/:id', async(req, res) => {
 router.post('/tambah', async(req, res) => {
     const check_jenis_mesin = await JenisMesin.find({ kode_jenis_mesin: req.body.kode_jenis_mesin });
     if (check_jenis_mesin.length > 0) {
-        res.status(500).send("Kode jenis mesin sudah tersedia")
+        res.status(500).send("Machine type code is available")
     } else {
         let data = {
             _id: mongoose.Types.ObjectId(),
@@ -32,7 +32,7 @@ router.post('/tambah', async(req, res) => {
         const save_data = await new_data.save();
         if (save_data) {
             res.status(200);
-            res.send("Berhasil menambahkan Jenis Mesin Baru")
+            res.send("Successfully added New Machine Type")
         }
     }
 })
@@ -40,13 +40,13 @@ router.post('/tambah', async(req, res) => {
 router.delete('/delete/:id', async(req, res) => {
     const result = await JenisMesin.findByIdAndDelete(req.params.id);
     res.status(200);
-    res.send("Berhasil menghapus Jenis Mesin")
+    res.send("Successfully delete Machine Type")
 })
 
 router.put('/edit/:id', async(req, res) => {
     const result = await JenisMesin.updateOne({ _id: req.params.id, }, { $set: req.body });
     res.status(200);
-    res.send("Berhasil mengubah Jenis Mesin")
+    res.send("Successfully changed Machine Type")
 })
 
 router.get("/daftar_mesin/:id", async(req, res) => {

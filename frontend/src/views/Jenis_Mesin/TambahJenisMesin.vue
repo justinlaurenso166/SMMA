@@ -88,28 +88,28 @@ function addKerusakan(){
             <Header />
             <section class="p-10 flex flex-col gap-9">
                 <div class="heading">
-                    <h1 class="font-bold text-gray-200 text-4xl">Jenis Mesin</h1>
+                    <h1 class="font-bold text-gray-200 text-4xl">Machine Types</h1>
                     <h1 class="font-medium text-gray-200 text-2xl mt-1.5">
-                        <span class="cursor-pointer" @click="$router.push({name:'JenisMesin'})">Jenis Mesin</span> / <span class="cursor-pointer" @click="$router.push({name:'EditJenisMesin'})">Tambah Jenis Mesin</span>
+                        <span class="cursor-pointer" @click="$router.push({name:'JenisMesin'})">Machine Types</span> / <span class="cursor-pointer" @click="$router.push({name:'EditJenisMesin'})">Add Machine Type</span>
                     </h1>
                 </div>
 
                 <div>
                     <div class="flex gap-7">
                         <div class="w-1/3 bg-light b-shadow py-7 px-8 rounded-xl">
-                            <h3 class="text-center font-bold text-lg">Informasi Umum</h3>
+                            <h3 class="text-center font-bold text-lg">General Information</h3>
                             <div class="info mt-3">
                                 <form @submit.prevent="addJenisMesin()">
                                     <div class="kode text-lg">
-                                        <h3 class="font-bold text-gray-200 uppercase tracking-wide">Kode</h3>
+                                        <h3 class="font-bold text-gray-200 uppercase tracking-wide">Code</h3>
                                         <input required type="text" class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" :class="alert.error ? 'border-red-200' : 'border-main_blue'" placeholder="Kode Jenis Mesin..." v-model="jenis_mesin_baru.kode_jenis_mesin">
                                     </div>
                                     <div class="nama text-lg mt-4">
-                                        <h3 class="font-bold text-gray-200 uppercase tracking-wide">Nama</h3>
+                                        <h3 class="font-bold text-gray-200 uppercase tracking-wide">Name</h3>
                                         <input required type="text" class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" placeholder="Nama Jenis Mesin..." v-model="jenis_mesin_baru.jenis_mesin">
                                     </div>
                                     <div class="desc text-lg mt-4">
-                                        <h3 class="font-bold text-gray-200 uppercase tracking-wide">Deskripsi</h3>
+                                        <h3 class="font-bold text-gray-200 uppercase tracking-wide">Description</h3>
                                         <textarea class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" rows="7" placeholder="Deskripsi..." v-model="jenis_mesin_baru.spesifikasi"></textarea>
                                     </div>
 
@@ -120,16 +120,16 @@ function addKerusakan(){
                             </div>
                         </div>
                         <div class="w-2/3 bg-light b-shadow rounded-xl py-7 px-8 self-start">
-                            <h3 class="text-center font-bold text-lg">Daftar Kerusakan</h3>
+                            <h3 class="text-center font-bold text-lg">Damage List</h3>
                             <div class="form mt-7">
                                 <div class="add_kerusakan">
                                     <div class="flex gap-7">
-                                        <input type="text" placeholder="Tambah Kerusakan..." class="w-full bg-gray-50 focus:outline-none py-3 px-3" v-model="new_kerusakan">
+                                        <input type="text" placeholder="Add Damage..." class="w-full bg-gray-50 focus:outline-none py-3 px-3" v-model="new_kerusakan">
                                     <div class="text-4xl bg-main_blue text-light px-4 py-1 rounded-md" @click="addKerusakan()"> + </div>
                                     </div>
                                 </div>
                                 <div class="list mt-5 text-lg">
-                                    <h3 class="font-bold">Kerusakan Mesin</h3>
+                                    <h3 class="font-bold">Machine Damage</h3>
                                     <p v-for="(kerusakan, idx) in jenis_mesin_baru.kerusakan" :key="kerusakan._id">
                                         <span>{{idx+1}}. </span>
                                         <span>{{kerusakan.nama}}</span>

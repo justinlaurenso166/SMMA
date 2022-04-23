@@ -56,17 +56,17 @@ let series;
 if(props.filter === "all"){
   series = [{
     type: "area",
-    name: "Percepatan",
+    name: "Acceleration",
     data: data_percepatan.value,
   },
   {
     type: "area",
-    name: "Kecepatan",
+    name: "Velocity",
     data: data_kecepatan.value,
   },
   {
     type: "area",
-    name: "Suhu",
+    name: "Temperature",
     data: data_suhu.value,
   }]
 }else if(props.filter === "percepatan"){

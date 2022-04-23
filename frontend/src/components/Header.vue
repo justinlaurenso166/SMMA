@@ -89,17 +89,17 @@ async function search(){
                         <span class="bg-red-200 text-light font-medium absolute right-0 px-1 rounded -mt-1 text-sm hover:cursor-pointer">{{$store.state.mesin_anomali.length}}</span>
                         <div class="absolute bg-light border rounded-lg py-2 px-2 -ml-64     mt-2 w-80 h-52 max-h-52 overflow-y-auto" v-if="showNotificationBox" style="box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);">
                             <div class="text-main_blue">
-                                <h1 class="text-center font-bold text-lg">Pemberitahuan</h1>
+                                <h1 class="text-center font-bold text-lg">Notification</h1>
                                 <div class="mt-3">
                                     <p v-for="(anomali, i) in $store.state.mesin_anomali" :key="i" @click="$router.push({name:'DetailMonitoring', params:{_id: anomali._id}})" class="hover:cursor-pointer">
                                         <span>{{i+1}}. </span>
-                                        <span class="text-main_blue text-base">{{anomali.sensor_ai.latest_data_ai[0].kondisi_kesehatan === 50 ? 'Terjadi anomali pada mesin ' : 'Terjadi kegagalan pada mesin '}}{{anomali.kode_mesin}}</span>
+                                        <span class="text-main_blue text-base">{{anomali.sensor_ai.latest_data_ai[0].kondisi_kesehatan === 50 ? 'Anomaly occurred in the machine ' : 'A failure has occurred on the machine '}}{{anomali.kode_mesin}}</span>
                                     </p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <span class="mr-5 text-2xl font-medium">
+                    <span class="mr-5 text-2xl font-medium hover:cursor-pointer" @click="$router.push({name:'UserSetting'})">
                         {{$store.state.user_data.username}}
                     </span>
                     <div class="border w-9 h-9 rounded-full"></div>
