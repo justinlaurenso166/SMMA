@@ -286,7 +286,9 @@ describe('Test search()', () => {
         });
     });
 });
+
 describe('Test editJenisMesin()', () => {
+
     it('Mengubah id jenis mesin', async() => {
         let mock_data = "Gagal, Id mesin tidak dapat diubah !"
 
@@ -306,7 +308,7 @@ describe('Test editJenisMesin()', () => {
 
         let data = {
             kode_jenis_mesin: "JMSN-001",
-            kode_jenis_mesin_baru: "JMSN-002",
+            kode_jenis_mesin_baru: "JMSN-001",
             jenis_mesin: "Motor Sangat Besar",
             spesifikasi: "Mesin berkapasitas besar untuk kebutuhan yang besar",
         }
@@ -320,7 +322,7 @@ describe('Test editJenisMesin()', () => {
 
         let data = {
             kode_jenis_mesin: "JMSN-001",
-            kode_jenis_mesin_baru: "JMSN-002",
+            kode_jenis_mesin_baru: "JMSN-001",
             jenis_mesin: "Motor Besar",
             spesifikasi: "Mesin bermotor dengan kapasitas biasa saja",
         }
@@ -334,7 +336,7 @@ describe('Test editJenisMesin()', () => {
 
         let data = {
             kode_jenis_mesin: "JMSN-001",
-            kode_jenis_mesin_baru: "JMSN-002",
+            kode_jenis_mesin_baru: "JMSN-001",
             jenis_mesin: "",
             spesifikasi: "Mesin berkapasitas besar untuk kebutuhan yang besar",
         }
@@ -348,7 +350,21 @@ describe('Test editJenisMesin()', () => {
 
         let data = {
             kode_jenis_mesin: "JMSN-001",
-            kode_jenis_mesin_baru: "JMSN-002",
+            kode_jenis_mesin_baru: "JMSN-001",
+            jenis_mesin: "Motor Besar",
+            spesifikasi: "",
+        }
+    
+        axios.put.mockImplementation(() => Promise.resolve(mock_data))
+        expect(await functions.editJenisMesin(data)).toEqual(mock_data)
+    });
+
+    it('Mengubah Id dengan mengosongkan data Id', async() => {
+        let mock_data = "Gagal, Data id harus diisi !"
+
+        let data = {
+            kode_jenis_mesin: "JMSN-001",
+            kode_jenis_mesin_baru: "",
             jenis_mesin: "Motor Besar",
             spesifikasi: "",
         }

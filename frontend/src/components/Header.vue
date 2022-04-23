@@ -102,7 +102,10 @@ async function search(){
                     <span class="mr-5 text-2xl font-medium hover:cursor-pointer" @click="$router.push({name:'UserSetting'})">
                         {{$store.state.user_data.username}}
                     </span>
-                    <div class="border w-9 h-9 rounded-full"></div>
+                    <div class="border w-9 h-9 rounded-full hover:cursor-pointer" @click="$router.push({name:'UserSetting'})">
+                        <img src="../../src/assets/img/admin.png" class="w-10 p-1" v-if="$store.state.user_data.hak_akses === 1">
+                        <img src="../../src/assets/img/user.png" class="w-10 p-1" v-else>
+                    </div>
                 </div>
             </header>
     </div>

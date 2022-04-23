@@ -46,7 +46,8 @@ import store from "../store"
             <section>
                 <div class="user-photo">
                     <div class="bg-light w-44 h-44 rounded-full m-auto flex items-center justify-center">
-                        
+                        <img src="../../src/assets/img/admin.png" class="w-32" v-if="$store.state.user_data.hak_akses === 1">
+                        <img src="../../src/assets/img/user.png" class="w-32" v-else>
                     </div>
                 </div>
                 <div class="username">

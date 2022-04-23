@@ -153,14 +153,9 @@ onMounted(async()=>{
                         </div>
                         <div class="bg-light rounded-2xl b-shadow">
                             <div class="side w-10 h-full float-left rounded-lg" style="background-color: #004f9b"></div>
-                            <div class="flex flex-col items-center px-7 py-7 justify-center h-full">
-                                <span class="desc text-lg font-bold text-main_black">Machine Health</span>
-                                <div class="w-full mt-2 bar-cont">
-                                    <!-- <div class="bar w-3/4 h-full rounded-lg"></div> -->
-                                    <div class="w-full bg-gray-100 h-7 rounded-lg dark:bg-gray-700">
-                                        <div class="text-base pt-1 h-7 font-bold text-main_black text-center p-0.5 leading-none rounded-lg" :class="[avg_kesehatan >= 70 ? 'bg-green-200' : '', avg_kesehatan < 70 && avg_kesehatan > 40 ? 'bg-yellow-200' : '',avg_kesehatan < 40 ? 'bg-red-200' : '']" :style="'width:'+avg_kesehatan+'%'"></div>
-                                    </div>
-                                </div>
+                            <div class="flex items-center px-7 justify-center">
+                                <span class="number text-main_black" style="font-size: 70px">{{mesin_anomali.length}}</span>
+                                <div class="desc px-7 text-lg font-bold text-main_black">Machine Anomaly</div>
                             </div>
                         </div>
                         <div class="bg-light rounded-2xl b-shadow">
