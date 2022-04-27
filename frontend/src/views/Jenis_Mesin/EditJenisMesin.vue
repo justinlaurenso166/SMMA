@@ -171,9 +171,6 @@ onMounted(async()=>{
                                         <h3 class="font-bold">Description</h3>
                                         <textarea class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" rows="10" v-model="jenis_mesin.spesifikasi"></textarea>
                                     </div>
-                                    <!-- <div class="save_changes w-52 m-auto mt-5">
-                                        <button class="bg-main_blue text-light text-lg px-3 p-3 w-full rounded-xl">Save Changes</button>
-                                    </div> -->
                                 </form>
                             </div>
                         </div>

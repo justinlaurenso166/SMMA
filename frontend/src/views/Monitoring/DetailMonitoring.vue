@@ -1,7 +1,7 @@
 <script setup>
 import SideBar from "../../components/SideBar.vue"
 import radialBar from "../../components/Chart/radialBarDetail.vue"
-import LineChart from "../../components/Chart/LineChart.vue"
+import LineChart from "../../components/Chart/LineChartDetail.vue"
 import modal from "../../components/ModalConfirm.vue"
 import Header from "../../components/Header.vue"
 import Datepicker from 'vue3-date-time-picker';
@@ -12,6 +12,7 @@ import { onMounted, watch } from "@vue/runtime-core";
 import { useRoute, useRouter } from "vue-router";
 import { createToast } from "mosha-vue-toastify";
 import "mosha-vue-toastify/dist/style.css";
+import moment from "moment";
 
 const route = useRoute();
 const router = useRouter();
@@ -26,8 +27,7 @@ const data_monitoring = ref();
 const detail_mesin = reactive({
     id_jenis_mesin: "",
     kode_mesin: "",
-    // jenis_mesin:"",
-    nama_mesin: "",
+    nama_mesin: "", 
     kode_sensor: "",
     lokasi_mesin: ""
 });
@@ -37,13 +37,39 @@ const penjelasan_mesin = reactive({
 })
 const data_anomali = reactive({
     data_sensor: [],
+    data_sensor_filtered: [],
 })
 const data_ai = ref([]);
 const latest_data_ai = ref([]);
 const pembaharuan_mesin = ref([]);
 const filter = reactive({
+    type:"Daily",
     chart: "all",
 })
+
+const dates = [
+    {
+        name: "Daily",
+        start_end_date: [
+            moment().format("L"),
+            moment().format("L")
+        ]
+    },
+    {
+        name: "Weekly",
+        start_end_date:[
+            moment().startOf('week').format("L"),
+            moment().endOf('week').format("L"),
+        ]
+    },
+    {
+        name: "Monthly",
+        start_end_date:[
+            moment().startOf('month').format("L"),
+            moment().endOf('month').format("L"),
+        ]
+    }
+]
 
 async function getMonitoringById(){
     try {
@@ -65,7 +91,7 @@ async function getMonitoringById(){
             else{
                 penjelasan_mesin.spesifikasi = "-";
             }
-            console.log(detail_mesin)
+            // console.log(detail_mesin)
         })
     } catch (error) {
         console.log(error)
@@ -196,7 +222,7 @@ function checkIndikasi(kondisi){
 }
 
 function checkStatus(kondisi){
-      let status;
+    let status;
     if(kondisi === 100){
         status = "Healthy"
     }
@@ -212,16 +238,120 @@ function checkStatus(kondisi){
 
 watch(()=>filter.chart,async function(){
     data_anomali.data_sensor = [];
+    filter.type = date.value.name;
+    data_anomali.data_sensor_filtered = []
+    await getMonitoringById();
+    if(date.value.name === "Daily"){
+        filterMesinDaily()
+    }
+    else if(date.value.name === "Weekly"){
+        filterMesinWeekly()
+    }
+    else if(date.value.name === "Monthly"){
+        filterMesinMonthly()
+    }
     await getMonitoringById();
 })
 
+function checkForDuplicates(array, keyName) {
+  return new Set(array.map(item => item[keyName])).size !== array.length
+}
+const filterMesinDaily = ()=>{
+    data_anomali.data_sensor_filtered = []
+    var startDate = new Date(date.value.start_end_date[0]);
+    var endDate = new Date(date.value.start_end_date[1]);
 
+    var resultFilter = data_anomali.data_sensor.filter(a => {
+        var date = new Date(a.timestamps);
+        return (+date >= +startDate && +date <= +endDate);
+    });
+    if(resultFilter){
+        data_anomali.data_sensor_filtered = resultFilter;
+    }
+    else{
+        data_anomali.data_sensor_filtered = [];
+    }
+    console.log(data_anomali.data_sensor_filtered)
+}
+
+const filterMesinWeekly = ()=>{
+    data_anomali.data_sensor_filtered = []
+    var startDate = new Date(date.value.start_end_date[0]);
+    var endDate = new Date(date.value.start_end_date[1]);
+    console.log(startDate)
+    console.log(endDate)
+    var resultFilter = data_anomali.data_sensor.filter(a => {
+        var week = new Date(a.timestamps);
+        return (+week >= +startDate && +week <= +endDate);
+    });
+    if(resultFilter){
+        // let map_data = resultFilter.map((item)=>new Date("2022-03-03").toLocaleDateString());
+        let map_data = resultFilter.map((item)=>new Date(item.timestamps).toLocaleDateString());
+        const test = map_data.some(
+            (val, i) => {
+                let bool;
+                if( map_data.indexOf(val) !== i){
+                    console.log(val)
+                    // let same_data = 
+                    bool = true;
+                }else{
+                    bool = false;
+                }
+
+                return bool
+            }
+        )
+        console.log(test)
+        data_anomali.data_sensor_filtered = resultFilter;
+    }
+    else{
+        data_anomali.data_sensor_filtered = [];
+    }
+    console.log(data_anomali.data_sensor_filtered)
+}
+
+const filterMesinMonthly = ()=>{
+    data_anomali.data_sensor_filtered = []
+    var startDate = new Date(date.value.start_end_date[0]);
+    var endDate = new Date(date.value.start_end_date[1]);
+
+    var resultFilter = data_anomali.data_sensor.filter(a => {
+        var month = new Date(a.timestamps);
+        return (+month >= startDate && +month <= +endDate);
+    });
+    if(resultFilter){
+        data_anomali.data_sensor_filtered = resultFilter;
+    }
+    else{
+        data_anomali.data_sensor_filtered = [];
+    }
+    console.log(data_anomali.data_sensor_filtered)
+}
+
+watch(()=>date.value, async function(){
+    // console.log(date.value)
+    filter.type = date.value.name;
+    data_anomali.data_sensor_filtered = []
+    await getMonitoringById();
+    if(date.value.name === "Daily"){
+        filterMesinDaily()
+    }
+    else if(date.value.name === "Weekly"){
+        filterMesinWeekly()
+    }
+    else if(date.value.name === "Monthly"){
+        filterMesinMonthly()
+    }
+})
 
 onMounted(async()=>{
+    date.value = dates[0];
     await getMonitoringById();
-    date.value = [new Date(), new Date()];
     await getJenisMesin();
     pembaharuanKondisiMesin()
+    filterMesinDaily();
+    // console.log(dates)
+    // console.log(data_anomali.data_sensor)
 })
 </script>
 
@@ -315,6 +445,10 @@ onMounted(async()=>{
                                     <h3 class="font-bold">Sensor Code</h3>
                                     <p class="">{{data_monitoring[0].kode_sensor}}</p>
                                 </div>
+                                <div class="location text-lg mt-2">
+                                    <h3 class="font-bold">Location</h3>
+                                    <p class="">{{data_monitoring[0].lokasi_mesin}}</p>
+                                </div>
                             </div>
                             <div class="info mt-5" v-else>
                                 <form @submit.prevent="editDetailMesin">
@@ -339,25 +473,22 @@ onMounted(async()=>{
                                         <h3 class="font-bold">Sensor Code</h3>
                                         <input type="text" class="mt-1 w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" v-model="detail_mesin.kode_sensor" disabled>
                                     </div>
+                                    <div class="location text-lg mt-2">
+                                        <h3 class="font-bold">Location</h3>
+                                        <textarea class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1 mt-2" rows="3"  v-model="detail_mesin.lokasi_mesin"></textarea>
+                                    </div>
                                     <div class="w-44 m-auto mt-9">
                                         <button class="bg-main_blue text-light text-lg py-2 px-4 rounded-md w-full">Save Changes</button>
                                     </div>
                                 </form>
                             </div>
                         </div>
-                        <div class="2xl:w-2/3 lg:w-full bg-light b-shadow rounded-xl py-7 px-8" v-if="data_monitoring?.length > 0">
-                            <div class="w-6 h-6 flex items-center justify-center bg-main_blue float-right rounded hover:cursor-pointer" @click="editPenjelasan = !editPenjelasan" v-if="$store.state.user_data.hak_akses === 1">
-                                <img src="../../assets/svg/Edit.svg" class="w-4">
-                            </div>
+                        <div class="2xl:w-2/3 lg:w-full bg-light b-shadow rounded-xl py-7 px-8 self-start" v-if="data_monitoring?.length > 0">
                             <h3 class="text-center font-bold text-lg">Machine Explanation</h3>
                             <div class="penjelasan mt-7 text-lg" v-if="!editPenjelasan">
                                 <div class="deskripsi">
                                     <h3 class="font-bold">Description</h3>
                                     <p class="text-justify mt-3">{{penjelasan_mesin.spesifikasi}}</p>
-                                </div>
-                                <div class="lokasi mt-5">
-                                    <h3 class="font-bold">Location</h3>
-                                    <p class="text-justify mt-3">{{detail_mesin.lokasi_mesin}}</p>
                                 </div>
                             </div>
                             <div class="penjelasan mt-7 text-lg" v-else>
@@ -365,13 +496,6 @@ onMounted(async()=>{
                                     <div class="deskripsi">
                                         <h3 class="font-bold">Description</h3>
                                         <p class="text-justify mt-3">{{penjelasan_mesin.spesifikasi}}</p>
-                                    </div>
-                                    <div class="lokasi mt-3">
-                                        <h3 class="font-bold">Location</h3>
-                                        <textarea class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1 mt-2" rows="3"  v-model="detail_mesin.lokasi_mesin"></textarea>
-                                    </div>
-                                    <div class="w-44 m-auto mt-7">
-                                        <button class="bg-main_blue text-light text-lg py-2 px-4 rounded-md w-full">Save Changes</button>
                                     </div>
                                 </form>
                             </div>
@@ -421,18 +545,18 @@ onMounted(async()=>{
                                         <option value="kecepatan">Velocity</option>
                                         <option value="suhu">Temperature</option>
                                     </select>
-                                    <select class="cursor-pointer focus:outline-none text-xl ml-8">
-                                        <option>Daily</option>
-                                        <option>Weekly</option>
-                                        <option>Monthly</option>
+                                    <select class="cursor-pointer focus:outline-none text-xl ml-8" v-model="date">
+                                        <option v-for="(d, idx) in dates" :key="idx" :value="d">
+                                            <span>{{d.name}}</span>
+                                        </option>
                                     </select>
                                 </div>
                             <div>
-                                <Datepicker autoApply :enableTimePicker="false" range v-model="date" :clearable="false" class="w-60"></Datepicker>
+                                <Datepicker autoApply :enableTimePicker="false" range v-model="date.start_end_date" :clearable="false" class="w-60"></Datepicker>
                             </div>
                         </div>
-                        <div class="mt-5" v-if="data_anomali.data_sensor.length > 0">
-                            <line-chart :data_sensor="data_anomali.data_sensor" :filter="filter.chart"></line-chart>
+                        <div class="mt-5" v-if="data_anomali.data_sensor_filtered.length > 0">
+                            <line-chart :data_sensor="data_anomali.data_sensor_filtered" :filter="filter.chart" :type="filter.type"></line-chart>
                         </div>
                     </div>
                 </div>

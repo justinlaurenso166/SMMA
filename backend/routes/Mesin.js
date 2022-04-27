@@ -5,6 +5,7 @@ const mongoose = require("mongoose")
 const Sensors = require("../models/Sensors")
 const HasilAi = require("../models/HasilAi")
 const JenisMesin = require("../models/JenisMesin")
+const ISODate = require("isodate")
 
 //all route
 router.get('/', (req, res) => {
@@ -200,6 +201,21 @@ router.post('/search', async(req, res) => {
         res.json(search_mesin)
     }
 })
+
+// router.get("/filter/:id", async(req, res)=>{
+//     let start_date = req.query.start_date;
+//     let end_date = req.query.end_date;
+
+//     let get_mesin = await Sensors.find({"id_sensor": req.params.id, "data_sensor.timestamps": {$gte: new Date(start_date),$lte: new Date(end_date)}});
+    
+//     if(get_mesin.length > 0){
+//         res.status(200)
+//         res.json(get_mesin)
+//     }else {
+//         res.status(500)
+//         res.send("Not Found")
+//     }
+// })
 
 
 module.exports = router
