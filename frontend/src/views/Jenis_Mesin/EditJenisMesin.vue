@@ -165,7 +165,7 @@ onMounted(async()=>{
                                     </div>
                                     <div class="nama text-lg mt-2">
                                         <h3 class="font-bold">Name</h3>
-                                        <input type="text"  class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" v-model="jenis_mesin.jenis_mesin">
+                                        <input required type="text"  class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" v-model="jenis_mesin.jenis_mesin">
                                     </div>
                                     <div class="desc text-lg mt-2">
                                         <h3 class="font-bold">Description</h3>

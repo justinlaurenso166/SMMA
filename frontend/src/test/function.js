@@ -55,6 +55,24 @@ const functions = {
             }
         }
     },
+    editDetailMesin: async function(data) {
+        let update_detail_mesin = {
+            kode_mesin: data.kode_mesin_baru,
+            nama_mesin: data.nama_mesin,
+            kode_sensor: data.kode_sensor,
+            lokasi_mesin: data.lokasi_mesin,
+        }
+        try {
+            let res = await axios.put(URL + `/mesin/edit/${data.kode_mesin}`, update_detail_mesin)
+            console.log(res)
+            return res
+        } catch (error) {
+            if (error.response) {
+                // console.log(error.response.data)
+                return error.response.data;
+            }
+        }
+    },
     deleteJenisMesin: async function(id_jenis_mesin) {
         try {
             let res = await axios.delete(URL + `/jenis_mesin/delete/${id_jenis_mesin}`)
@@ -78,28 +96,28 @@ const functions = {
         }
     },
     search: async function(type, search_input) {
-            try {
-                let res = axios.post(URL + `/${type}/search?search=${search_input}`);
-                console.log(res)
-                return res;
-            } catch (error) {
-                console.log(error)
+        try {
+            let res = axios.post(URL + `/${type}/search?search=${search_input}`);
+            console.log(res)
+            return res;
+        } catch (error) {
+            console.log(error)
+        }
+    },
+    login: async function(username, password) {
+        let data = {
+            username: username,
+            password: password
+        }
+        try {
+            let res = await axios.post(URL + "/user/login", data);
+            // console.log(res)
+            return res;
+        } catch (error) {
+            if (error.response) {
+                return error.response.data;
             }
         }
-        // login: async function(username, password) {
-        //     let data = {
-        //         username: username,
-        //         password: password
-        //     }
-        //     try {
-        //         let res = await axios.post(URL + "/user/login", data);
-        //         // console.log(res)
-        //         return res;
-        //     } catch (error) {
-        //         if (error.response) {
-        //             return error.response.data;
-        //         }
-        //     }
-        // },
+    },
 }
 module.exports = functions

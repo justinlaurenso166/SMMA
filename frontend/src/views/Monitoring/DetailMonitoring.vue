@@ -13,6 +13,7 @@ import { useRoute, useRouter } from "vue-router";
 import { createToast } from "mosha-vue-toastify";
 import "mosha-vue-toastify/dist/style.css";
 import moment from "moment";
+import ObjectId from "bson-objectid"
 
 const route = useRoute();
 const router = useRouter();
@@ -278,21 +279,50 @@ const filterMesinWeekly = ()=>{
     data_anomali.data_sensor_filtered = []
     var startDate = new Date(date.value.start_end_date[0]);
     var endDate = new Date(date.value.start_end_date[1]);
-    console.log(startDate)
-    console.log(endDate)
+ 
     var resultFilter = data_anomali.data_sensor.filter(a => {
         var week = new Date(a.timestamps);
         return (+week >= +startDate && +week <= +endDate);
     });
     if(resultFilter){
-        // let map_data = resultFilter.map((item)=>new Date("2022-03-03").toLocaleDateString());
         let map_data = resultFilter.map((item)=>new Date(item.timestamps).toLocaleDateString());
-        const test = map_data.some(
+        console.log(map_data)
+        map_data.some(
             (val, i) => {
                 let bool;
+                let same_date = [];
                 if( map_data.indexOf(val) !== i){
-                    console.log(val)
-                    // let same_data = 
+                    map_data.forEach((e)=>{
+                        same_date.push(e)
+                        if(new Date(e).toLocaleDateString() === val){
+                        }
+                    })
+                    console.log(same_date)
+                    let same_data = resultFilter.filter((item)=> new Date(item.timestamps).toLocaleDateString() === val);
+                    if(same_data.length > 0){
+                        let avg_data = [
+                            {
+                                _id: new ObjectId().toString(),
+                                percepatan: 0,
+                                kecepatan: 0,
+                                suhu: 0,
+                                timestamps: new Date(val).toISOString(),
+                            }
+                        ]
+                        //loop data with the same date and average them
+                        same_data.forEach((e)=>{
+                            avg_data[0].kecepatan = (avg_data[0].kecepatan += e.kecepatan);
+                            avg_data[0].percepatan =(avg_data[0].percepatan += e.percepatan);
+                            avg_data[0].suhu= (avg_data[0].suhu += e.suhu);
+                        })
+                        avg_data[0].kecepatan = (avg_data[0].kecepatan / same_data.length);
+                        avg_data[0].percepatan =(avg_data[0].percepatan / same_data.length);
+                        avg_data[0].suhu= (avg_data[0].suhu / same_data.length);
+
+                        let remove_same_val = resultFilter.filter((item)=> new Date(item.timestamps).toLocaleDateString() !== val);
+                        remove_same_val.push(avg_data[0]);
+                        resultFilter = remove_same_val
+                    }
                     bool = true;
                 }else{
                     bool = false;
@@ -301,7 +331,6 @@ const filterMesinWeekly = ()=>{
                 return bool
             }
         )
-        console.log(test)
         data_anomali.data_sensor_filtered = resultFilter;
     }
     else{
