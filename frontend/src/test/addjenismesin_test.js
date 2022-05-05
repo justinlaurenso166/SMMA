@@ -74,7 +74,21 @@ function TestAddJenisMesin() {
             expect(await functions.addJenisMesin(data)).toEqual(mock_data)
         })
 
-        it("Tambah Data Jenis Mesin dengan data mesin (Nama dan Deskripsi) yang sudah tersimpan  ", async() => {
+        it("Tambah Data Jenis Mesin dengan data nama mesin yang sudah tersimpan  ", async() => {
+            let mock_data = "Berhasil menambahkan Jenis Mesin Baru"
+
+            let data = {
+                kode_jenis_mesin: "JMSN-001",
+                jenis_mesin: "Motor Besar",
+                spesifikasi: "Mesin berkapasitas besar untuk kebutuhan yang besar",
+                kerusakan: []
+            }
+
+            axios.post.mockImplementation(() => Promise.resolve(mock_data))
+            expect(await functions.addJenisMesin(data)).toEqual(mock_data)
+        })
+
+        it("Tambah Data Jenis Mesin dengan data deskripsi mesin yang sudah tersimpan  ", async() => {
             let mock_data = "Berhasil menambahkan Jenis Mesin Baru"
 
             let data = {

@@ -9,13 +9,13 @@ const TestEditDetailMesin = require("./editdetailmesin_test");
 jest.mock("axios")
 
 //Test case novia
-TestAddJenisMesin();
+// TestAddJenisMesin();
 
 //Test case Justin
 TestEditJenisMesin();
 
 //Test Case vartin
-TestEditDetailMesin();
+// TestEditDetailMesin();
 
 //Dump
 // Dump();

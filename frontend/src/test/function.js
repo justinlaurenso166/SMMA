@@ -16,12 +16,11 @@ const functions = {
     },
     addJenisMesin: async function(data) {
         let jenis_mesin_baru = {
-                kode_jenis_mesin: data.kode_jenis_mesin,
-                jenis_mesin: data.jenis_mesin,
-                spesifikasi: data.spesifikasi,
-                kerusakan: data.kerusakan,
-            }
-            // console.log(jenis_mesin_baru)
+            kode_jenis_mesin: data.kode_jenis_mesin,
+            jenis_mesin: data.jenis_mesin,
+            spesifikasi: data.spesifikasi,
+            kerusakan: data.kerusakan,
+        }
         try {
             let res = await axios.post(URL + `/jenis_mesin/tambah`, jenis_mesin_baru)
             console.log(res)
