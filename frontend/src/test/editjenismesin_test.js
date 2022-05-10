@@ -3,7 +3,6 @@ const functions = require("./function")
 
 function TestEditJenisMesin() {
     describe('Test editJenisMesin()', () => {
-
         it('Mengubah id jenis mesin', async() => {
             let mock_data = "Gagal, Id mesin tidak dapat diubah !"
 

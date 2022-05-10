@@ -118,5 +118,98 @@ const functions = {
             }
         }
     },
+    addKerusakan: async function(new_kerusakan) {
+        let daftar_kerusakan = [];
+        if (new_kerusakan !== '') {
+            let new_data = {
+                _id: "KJMSN-001",
+                nama: new_kerusakan,
+            }
+            daftar_kerusakan.push(new_data);
+        } else {
+            daftar_kerusakan = [];
+        }
+
+        return daftar_kerusakan;
+    },
+    removeKerusakan: async function(id) {
+        let daftar_kerusakan = [{
+            _id: "KJMSN-001",
+            nama: "Baling baling patah"
+        }];
+
+        daftar_kerusakan = daftar_kerusakan.filter((item) => item._id !== id)
+
+        return daftar_kerusakan;
+    },
+    checkStatus: async function(kondisi) {
+        let status;
+        if (kondisi === 100) {
+            status = "Healthy"
+        } else if (kondisi === 50) {
+            status = "Anomaly"
+        } else if (kondisi === 0) {
+            status = "Failed"
+        } else {
+            status = "Unknown"
+        }
+        console.log(status)
+        return status
+    },
+    deleteMonitoring: async function(id) {
+        try {
+            let res = await axios.delete(URL + `/mesin/delete/${id}`)
+            console.log(res)
+            return res;
+        } catch (error) {
+            if (error.response) {
+                return error.response.data;
+            }
+        }
+    },
+    getAllMonitoring: async function() {
+        try {
+            let res = await axios.get(URL + '/mesin/all')
+            console.log(res)
+            return res;
+        } catch (error) {
+            if (error.response) {
+                return error.response.data;
+            }
+        }
+    },
+    addMonitoring: async function(data) {
+        let mesin_baru = {
+            kode_mesin: data.kode_mesin,
+            nama_mesin: data.nama_mesin,
+            jenis_mesin: data.jenis_mesin,
+            kode_sensor: data.kode_sensor,
+            lokasi: data.lokasi,
+        }
+        try {
+            let res = await axios.post(URL + `/mesin/add`, mesin_baru)
+            console.log(res)
+            return res
+        } catch (error) {
+            if (error.response) {
+                // console.log(error.response.data)
+                return error.response.data;
+            }
+        }
+    },
+    checkMesinAnomali: async function() {
+        try {
+            let res = [];
+            let data = await axios.get(URL + '/mesin/all')
+            res = data.filter(
+                (item) => item.kondisi_kesehatan <= 50
+            );
+            return res;
+        } catch (error) {
+            if (error.response) {
+                return error.response.data;
+            }
+        }
+    }
 }
 module.exports = functions

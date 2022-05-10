@@ -264,7 +264,7 @@ const filterMesinDaily = ()=>{
 
     var resultFilter = data_anomali.data_sensor.filter(a => {
         var date = new Date(a.timestamps);
-        return (+date >= +startDate && +date <= +endDate);
+        return ((date.getDate() === startDate.getDate() && date.getMonth() === startDate.getMonth() && date.getFullYear() === startDate.getFullYear()));
     });
     if(resultFilter){
         data_anomali.data_sensor_filtered = resultFilter;
@@ -483,15 +483,15 @@ onMounted(async()=>{
                                 <form @submit.prevent="editDetailMesin">
                                     <div class="kode text-lg">
                                         <h3 class="font-bold">Machine Code</h3>
-                                        <input type="text" class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" v-model="detail_mesin.kode_mesin" disabled>
+                                        <input required type="text" class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" v-model="detail_mesin.kode_mesin" disabled>
                                     </div>
                                     <div class="nama text-lg mt-2">
                                         <h3 class="font-bold">Name</h3>
-                                        <input type="text" class="mt-1 w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1"  v-model="detail_mesin.nama_mesin">
+                                        <input required type="text" class="mt-1 w-full bg-gray-50 focus:outline-none py-3 px-3"  v-model="detail_mesin.nama_mesin">
                                     </div>
                                     <div class="jenis text-lg mt-2">
                                         <h3 class="font-bold">Machine Type</h3>
-                                        <select class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" v-model="detail_mesin.id_jenis_mesin">
+                                        <select required class="w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" v-model="detail_mesin.id_jenis_mesin">
                                             <option disabled value="">Pilih Jenis Mesin</option>
                                             <option v-for="jenis in all_jenis_mesin" :key="jenis._id" :value="jenis._id">
                                                 {{jenis.jenis_mesin}}
@@ -500,7 +500,7 @@ onMounted(async()=>{
                                     </div>
                                     <div class="sensor text-lg mt-2">
                                         <h3 class="font-bold">Sensor Code</h3>
-                                        <input type="text" class="mt-1 w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" v-model="detail_mesin.kode_sensor" disabled>
+                                        <input required type="text" class="mt-1 w-full bg-gray-50 focus:outline-none py-3 px-3 mt-1" v-model="detail_mesin.kode_sensor" disabled>
                                     </div>
                                     <div class="location text-lg mt-2">
                                         <h3 class="font-bold">Location</h3>

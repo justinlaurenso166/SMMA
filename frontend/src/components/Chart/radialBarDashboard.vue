@@ -40,8 +40,7 @@ var chartOptions = {
       },
       dataLabels: {
         name: {
-          offsetY: 0,
-          show: true,
+          show: false,
           color: "#1a1d29",
           fontSize: "25px"
         },

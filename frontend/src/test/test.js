@@ -1,4 +1,4 @@
-jest.useFakeTimers();
+// jest.useFakeTimers();
 const axios = require("axios")
 const functions = require("./function")
 const Dump = require("./dump");
@@ -12,10 +12,10 @@ jest.mock("axios")
 // TestAddJenisMesin();
 
 //Test case Justin
-TestEditJenisMesin();
+// TestEditJenisMesin();
 
 //Test Case vartin
 // TestEditDetailMesin();
 
 //Dump
-// Dump();
+Dump();

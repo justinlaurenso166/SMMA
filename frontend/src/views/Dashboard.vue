@@ -200,7 +200,7 @@ onMounted(async()=>{
                     </div>
                 </div>
                 <div class="kesehatan">
-                    <div class="bg-light b-shadow py-6 px-7 rounded-2xl" style="height: 400px">
+                    <div class="bg-light b-shadow py-6 px-7 rounded-2xl">
                             <h3 class="text-center font-bold text-xl relative">
                                 Machine Health
                                 <span class="absolute right-0 text-sm mt-2 italic underline hover:cursor-pointer" @click="$router.push({name: 'Monitoring'})">See More ></span>
@@ -208,7 +208,8 @@ onMounted(async()=>{
                             <div class="list mt-9 text-lg grid 2xl:grid-cols-4 md:grid-cols-1 gap-8">
                                 <div v-for="(msn,i) in mesin_anomali" :key="i" class="relative hover:cursor-pointer" @click="$router.push({name:'DetailMonitoring', params:{_id: msn._id}})">
                                     <radial :health="msn.sensor_ai.latest_data_ai[0].kondisi_kesehatan" :labels="msn.nama_mesin" :indikasi="msn.sensor_ai.latest_data_ai[0].indikasi_kerusakan"></radial>
-                                    <p class="text-center -mt-20 font-bold">{{msn.sensor_ai.kode_mesin}}</p>
+                                    <p class="text-center font-bold text-2xl">{{msn.nama_mesin}}</p>
+                                    <p class="text-center mt-3 font-bold">{{msn.sensor_ai.kode_mesin}}</p>
                                     <p class="text-center mt-1">{{msn.sensor_ai.latest_data_ai[0].indikasi_kerusakan}}</p>
                                 </div>
                             </div>
