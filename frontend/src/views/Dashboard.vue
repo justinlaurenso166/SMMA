@@ -62,7 +62,19 @@ async function getAllMonitoring(){
                 }
             }
 
-            mesin_anomali.value = mesin.value.filter((item)=>item.sensor_ai.latest_data_ai[0].kondisi_kesehatan <= 50)
+            let anomali = mesin.value.filter((item)=>item.sensor_ai.latest_data_ai[0].kondisi_kesehatan <= 50)
+
+            if(anomali.length < 4){
+                mesin_anomali.value = []
+                mesin_anomali.value = anomali
+            }else {
+                mesin_anomali.value = []
+                for(let i = 0; i <= 3; i++){
+                    console.log(anomali[i])
+                    mesin_anomali.value.push(anomali[i])
+                    console.log(mesin_anomali.value)
+                }
+            }
             
             let sum = 0;
             mesin.value.forEach((e)=>{
