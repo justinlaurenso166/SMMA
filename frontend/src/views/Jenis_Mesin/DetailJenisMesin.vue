@@ -13,6 +13,7 @@ const jenis_mesin = ref([]);
 const id = route.params._id;
 const daftar_mesin = ref([]);
 
+// get jenis mesin by id and insert into jenis_mesin state
 async function getJenisMesinById(){
     try {
         await axios.get(`/api/jenis_mesin/${id}`).then((response)=>{
@@ -24,6 +25,7 @@ async function getJenisMesinById(){
     }
 }
 
+// get daftar mesin and insert into daftar_mesin state
 async function getDaftarMesin(){
     try {
         await axios.get('/api/jenis_mesin/daftar_mesin/'+id).then((res)=>{
@@ -75,7 +77,7 @@ onMounted(async()=>{
                     <div class="mt-7 flex gap-7 2xl:flex-row lg:flex-col">
                         <div class="2xl:w-1/3 lg:w-full">
                             <div class=" bg-light b-shadow py-7 px-8 rounded-xl">
-                                <h3 class="text-center font-bold text-lg text-gray-200">General Information</h3>
+                                <h3 class="text-center font-bold text-lg text-black">General Information</h3>
                                 <div class="info mt-3">
                                     <div class="kode text-lg">
                                         <h3 class="font-bold">Code</h3>
@@ -96,7 +98,7 @@ onMounted(async()=>{
                         </div>
                         <div class="2xL:w-2/3 lg:w-full ">
                             <div class="bg-light b-shadow rounded-xl py-7 px-8 self-start">
-                                <h3 class="text-center font-bold text-lg text-gray-200">Damage List</h3>
+                                <h3 class="text-center font-bold text-lg text-black">Damage List</h3>
                                 <div class="form mt-7">
                                     <div class="list mt-5 text-lg">
                                         <h3 class="font-bold">Machine Damage</h3>

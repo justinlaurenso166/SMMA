@@ -32,6 +32,7 @@ router.post('/adduser', async(req, res) => {
 })
 
 router.post('/login', async(req, res) => {
+    console.log(req.body)
     const username = req.body.username;
     const password = req.body.password;
     const userLogin = await Login.find({ username: username, password: password })
@@ -71,6 +72,14 @@ router.put('/edit/:id', async(req, res) => {
             res.status(200)
             res.send("Password successfully changed")
         }
+    }
+})
+
+router.put('/edituser/:id', async(req, res) => {
+    const edit_user = await Login.updateOne({ _id: req.params.id }, { $set: req.body })
+    if (edit_user) {
+        res.status(200)
+        res.send("User Data edited successfully")
     }
 })
 

@@ -7,7 +7,13 @@ const { off } = require('../models/JenisMesin')
 
 //all route
 router.get('/all', async(req, res) => {
-    const all = await JenisMesin.find();
+    let limit = req.query.limit;
+    let all;
+    if (limit) {
+        all = await JenisMesin.find().limit(limit);
+    } else {
+        all = await JenisMesin.find();
+    }
     res.json(all)
 })
 

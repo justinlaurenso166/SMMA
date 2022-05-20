@@ -13,26 +13,50 @@ router.get('/', (req, res) => {
 })
 
 router.get('/all', async(req, res) => {
-    // const all = await Mesin.find();
-    const all = await Mesin.aggregate([{
-            $lookup: {
-                from: Sensors.collection.name,
-                localField: "kode_sensor",
-                foreignField: "id_sensor",
-                as: "sensor_result",
+    let limit = req.query.limit;
+    let all;
+    if (limit) {
+        all = await Mesin.aggregate([{
+                $lookup: {
+                    from: Sensors.collection.name,
+                    localField: "kode_sensor",
+                    foreignField: "id_sensor",
+                    as: "sensor_result",
+                },
             },
-        },
-        { $unwind: { "path": "$sensor_result", "preserveNullAndEmptyArrays": true } },
-        {
-            $lookup: {
-                from: HasilAi.collection.name,
-                localField: "kode_mesin",
-                foreignField: "kode_mesin",
-                as: "sensor_ai",
+            { $unwind: { "path": "$sensor_result", "preserveNullAndEmptyArrays": true } },
+            {
+                $lookup: {
+                    from: HasilAi.collection.name,
+                    localField: "kode_mesin",
+                    foreignField: "kode_mesin",
+                    as: "sensor_ai",
+                },
             },
-        },
-        { $unwind: { "path": "$sensor_ai", "preserveNullAndEmptyArrays": true } },
-    ]).exec();
+            { $unwind: { "path": "$sensor_ai", "preserveNullAndEmptyArrays": true } },
+            { $skip: 0 }, { $limit: parseInt(limit) },
+        ]).exec();
+    } else {
+        all = await Mesin.aggregate([{
+                $lookup: {
+                    from: Sensors.collection.name,
+                    localField: "kode_sensor",
+                    foreignField: "id_sensor",
+                    as: "sensor_result",
+                },
+            },
+            { $unwind: { "path": "$sensor_result", "preserveNullAndEmptyArrays": true } },
+            {
+                $lookup: {
+                    from: HasilAi.collection.name,
+                    localField: "kode_mesin",
+                    foreignField: "kode_mesin",
+                    as: "sensor_ai",
+                },
+            },
+            { $unwind: { "path": "$sensor_ai", "preserveNullAndEmptyArrays": true } },
+        ]).exec();
+    }
     res.json(all)
 })
 
@@ -207,7 +231,7 @@ router.post('/search', async(req, res) => {
 //     let end_date = req.query.end_date;
 
 //     let get_mesin = await Sensors.find({"id_sensor": req.params.id, "data_sensor.timestamps": {$gte: new Date(start_date),$lte: new Date(end_date)}});
-    
+
 //     if(get_mesin.length > 0){
 //         res.status(200)
 //         res.json(get_mesin)

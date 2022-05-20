@@ -12,10 +12,10 @@ jest.mock("axios")
 // TestAddJenisMesin();
 
 //Test case Justin
-// TestEditJenisMesin();
+TestEditJenisMesin();
 
 //Test Case vartin
 // TestEditDetailMesin();
 
 //Dump
-Dump();
+// Dump();

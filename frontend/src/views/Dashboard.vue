@@ -7,6 +7,7 @@ import axios from "axios"
 import { reactive, ref } from "@vue/reactivity"
 import { onMounted, watch } from "@vue/runtime-core"
 
+//reactive state
 const jenis_mesin = ref([]);
 const jenis_mesin_count = ref(0);
 const mesin = ref([]);
@@ -22,45 +23,25 @@ const data_sensor = ref([]);
 const filter = reactive({
     chart: "all",
 })
-const avg_kesehatan = ref(0)
 
+// get jenis mesin data and insert max 6 data to jenis_mesin state
 async function getJenisMesin(){
     try {
-        await axios.get('/api/jenis_mesin/all').then((response)=>{
-            // console.log(response.data)
+        await axios.get('/api/jenis_mesin/all?limit=6').then((response)=>{
             jenis_mesin_count.value = response.data.length;
-            if(response.data.length < 6){
-                jenis_mesin.value = []
-                jenis_mesin.value = response.data
-            }else {
-                jenis_mesin.value = []
-                for(let i = 0; i <= 5; i++){
-                    console.log(response.data[i])
-                    jenis_mesin.value.push(response.data[i])
-                    console.log(jenis_mesin.value)
-                }
-            }
-
+            jenis_mesin.value = response.data
         })
     } catch (error) {
         console.log(error)
     }
 }
 
+// get all monitoring data and insert max 6 data to mesin state
 async function getAllMonitoring(){
     try {
-        await axios.get("/api/mesin/all").then((response)=>{
+        await axios.get("/api/mesin/all?limit=6").then((response)=>{
             mesin_count.value = response.data.length;
-            if(response.data.length < 6){
-                mesin.value = []
-                mesin.value = response.data;
-            }
-            else{
-                mesin.value = []
-                for(let i = 0; i <= 5; i++){
-                    mesin.value.push(response.data[i])
-                }
-            }
+            mesin.value = response.data;
 
             let anomali = mesin.value.filter((item)=>item.sensor_ai.latest_data_ai[0].kondisi_kesehatan <= 50)
 
@@ -75,12 +56,6 @@ async function getAllMonitoring(){
                     console.log(mesin_anomali.value)
                 }
             }
-            
-            let sum = 0;
-            mesin.value.forEach((e)=>{
-                sum = sum += e.sensor_ai.latest_data_ai[0].kondisi_kesehatan;
-            })
-            avg_kesehatan.value = sum / mesin.value.length;
         })
     } catch (error) {
         console.log(error)
@@ -127,9 +102,6 @@ onMounted(async()=>{
 </script>
 
 <style scoped>
-    .bar{
-        background: linear-gradient(90deg, #FF0000 -7.14%, #FFF000 88.18%);
-    }
     .b-shadow{
         box-shadow: 3px 5px 6px rgba(0, 0, 0, 0.25);
     }
@@ -217,10 +189,10 @@ onMounted(async()=>{
                                 Machine Health
                                 <span class="absolute right-0 text-sm mt-2 italic underline hover:cursor-pointer" @click="$router.push({name: 'Monitoring'})">See More ></span>
                             </h3>
-                            <div class="list mt-9 text-lg grid 2xl:grid-cols-4 md:grid-cols-1 gap-8">
+                            <div class="list mt-9 text-lg grid 2xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-1 gap-8">
                                 <div v-for="(msn,i) in mesin_anomali" :key="i" class="relative hover:cursor-pointer" @click="$router.push({name:'DetailMonitoring', params:{_id: msn._id}})">
                                     <radial :health="msn.sensor_ai.latest_data_ai[0].kondisi_kesehatan" :labels="msn.nama_mesin" :indikasi="msn.sensor_ai.latest_data_ai[0].indikasi_kerusakan"></radial>
-                                    <p class="text-center font-bold text-2xl">{{msn.nama_mesin}}</p>
+                                    <p class="text-center font-bold text-2xl lg:-mt-20 md:mt-0">{{msn.nama_mesin}}</p>
                                     <p class="text-center mt-3 font-bold">{{msn.sensor_ai.kode_mesin}}</p>
                                     <p class="text-center mt-1">{{msn.sensor_ai.latest_data_ai[0].indikasi_kerusakan}}</p>
                                 </div>

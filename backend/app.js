@@ -3,12 +3,15 @@ const mongoose = require("mongoose")
 const bodyParser = require("body-parser")
     // create our express app
 const app = express()
+const cors = require('cors')
 
 //import route
 const MesinRoute = require("./routes/Mesin");
 const UserRoute = require("./routes/Login");
 const SensorsRoute = require("./routes/Sensors");
 const JenisMesinRoute = require("./routes/JenisMesin")
+
+app.use(cors())
 
 // middleware
 app.use(bodyParser.json())
