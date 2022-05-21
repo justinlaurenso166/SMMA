@@ -161,10 +161,6 @@ function pembaharuanKondisiMesin(){
 
     if(sensor_length === ai_length){
         for(let i = 0; i < sensor_length; i++){
-            // if(data_anomali.data_sensor[i].timestamps === data_ai.value[i].created_at){
-            //     let new_obj = Object.assign({},data_anomali.data_sensor[i],data_ai.value[i]);
-            //     pembaharuan_mesin.value.push(new_obj)
-            // }
             let new_obj = Object.assign({},data_anomali.data_sensor[i],data_ai.value[i]);
             pembaharuan_mesin.value.push(new_obj)
         }

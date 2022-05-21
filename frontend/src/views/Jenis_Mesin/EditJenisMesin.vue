@@ -107,7 +107,7 @@ async function removeMesin(){
         axios.put('/api/mesin/remove/'+remove_mesin_id.value, data[0]).then((res)=>{
             if(res.status === 200){
                 console.log(res.data)
-                daftar_mesin.value = daftar_mesin.value.filter((item)=>item._id!== remove_mesin_id.value)
+                daftar_mesin.value = daftar_mesin.value.filter((item)=>item._id !== remove_mesin_id.value)
                 showDeleteMesinBox.value = false;
             }
         })

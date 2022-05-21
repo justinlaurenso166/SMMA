@@ -37,7 +37,6 @@ async function deleteJenisMesin(){
                     showIcon: true,
                     transition: "zoom",
                 });
-                
                 getJenisMesin();
             }
         })
