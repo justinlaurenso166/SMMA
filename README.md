@@ -8,6 +8,6 @@ This template should help get you started developing with Vue 3 in Vite. The tem
 
 Run the program :
 
-Frontend : Go to frontend folder and type npm run dev
+Frontend : Go to frontend folder, type npm install, and type npm run dev
 
-Backend : Go to backend folder and type nodemon app.js
+Backend : Go to backend folder, type npm install and type nodemon app.js
