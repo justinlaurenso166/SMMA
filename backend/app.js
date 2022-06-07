@@ -15,10 +15,6 @@ app.use(cors())
 
 // middleware
 app.use(bodyParser.json())
-    // routes
-app.get("/", (req, res) => {
-    res.send("my home page dey show sha")
-})
 
 app.use('/mesin', MesinRoute)
 app.use('/user', UserRoute)
