@@ -27,8 +27,8 @@ const routes = [
 ];
 
 const router = createRouter({
-    history: createWebHistory(),
     mode: 'history',
+    history: createWebHistory(),
     routes,
     scrollBehavior(to, from, last) {
         // always scroll to top when entering page
