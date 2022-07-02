@@ -250,9 +250,6 @@ watch(()=>filter.chart,async function(){
     await getMonitoringById();
 })
 
-function checkForDuplicates(array, keyName) {
-  return new Set(array.map(item => item[keyName])).size !== array.length
-}
 const filterMesinDaily = ()=>{
     data_anomali.data_sensor_filtered = []
     var startDate = new Date(date.value.start_end_date[0]);

@@ -4,6 +4,7 @@ const Login = require("../models/Pengguna")
 const mongoose = require("mongoose")
 const jwt = require("jsonwebtoken")
 
+
 //all route
 router.get('/', (req, res) => {
     res.send("Semua Mesin")
@@ -13,6 +14,7 @@ router.get('/all', async(req, res) => {
     const all = await Login.find();
     res.json(all)
 })
+
 
 router.post('/adduser', async(req, res) => {
     let data = {

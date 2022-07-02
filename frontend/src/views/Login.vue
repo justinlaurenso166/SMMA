@@ -52,8 +52,8 @@ async function login() {
 </style>
 
 <template>
-  <div class="flex h-screen bg-gray-400">
-    <div class=" bg-main_blue rounded-tr-3xl rounded-br-3xl" style="width: 500px">
+  <div class="flex h-screen">
+    <div class="bg-main_blue rounded-tr-3xl rounded-br-3xl" style="width: 500px">
       <div class="logo_text flex flex-col items-center justify-center h-screen relative">
           <div class="logo -mt-24">
             <h1 class="text-light font-extrabold tracking-wider" style="font-size: 60px;">
@@ -84,7 +84,7 @@ async function login() {
           content-center
         "
       >
-        <div class="sign_in bg-gray-400 py-8 px-10 border-2 rounded-3xl border-main_blue shadow-main_blue w-2/3">
+        <div class="sign_in py-8 px-10 border-2 rounded-3xl border-main_blue shadow-main_blue w-2/3">
           <form method="POST" @submit.prevent="login()" class="flex flex-col">
             <h1 class="text-center mb-5 text-main_blue font-semibold" style="font-size: 48px;">Sign In</h1>
             <div class="flex mb-5">

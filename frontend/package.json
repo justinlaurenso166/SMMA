@@ -16,6 +16,8 @@
         "axios": "^0.26.0",
         "bson-objectid": "^2.0.3",
         "mosha-vue-toastify": "^1.0.23",
+        "mqtt": "^4.3.7",
+        "ttn": "^2.3.3",
         "vue": "^3.2.25",
         "vue-router": "^4.0.12",
         "vue3-apexcharts": "^1.4.1",

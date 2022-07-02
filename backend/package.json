@@ -17,6 +17,7 @@
         "isodate": "^0.1.4",
         "jsonwebtoken": "^8.5.1",
         "mongoose": "^6.2.4",
+        "mqtt": "^4.3.7",
         "nodemon": "^2.0.15"
     },
     "devDependencies": {
